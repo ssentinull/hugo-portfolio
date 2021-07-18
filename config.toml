@@ -5,7 +5,7 @@ theme = "hello-friend"
 
 [params]
 contentTypeName = "posts"
-defaultTheme = "dark"
+defaultTheme = "light"
 showMenuItems = 2
 showReadingTime = false
 
