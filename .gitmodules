@@ -2,3 +2,7 @@
 	path = themes/hello-friend
 	url = https://github.com/ssentinull/hugo-theme-hello-friend.git
     branch = custom
+[submodule "public"]
+	path = public
+	url = https://github.com/ssentinull/ssentinull.github.io.git
+    branch = master
