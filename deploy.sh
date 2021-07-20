@@ -8,6 +8,9 @@ hugo -t hello-friend
 # go to /public directory
 cd public
 
+# switch to master branch
+git checkout master
+
 # add all the generated files
 git add .
 
