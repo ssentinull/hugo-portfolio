@@ -4,5 +4,5 @@
     branch = custom
 [submodule "public"]
 	path = public
-	url = https://github.com/ssentinull/ssentinull.github.io.git
+	url = git@github.com:ssentinull/ssentinull.github.io.git
     branch = master
