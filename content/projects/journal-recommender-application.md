@@ -61,19 +61,19 @@ After cloning the [repository](https://github.com/ssentinull/journal-recommender
    $ python3 -m venv venv
    ```
 
-2. activate the virtual environment
+2. Activate the virtual environment/.
 
    ```shell
    $ source venv/bin/activate
    ```
 
-3. install all the dependencies listed in `requirements.txt`
+3. Install all the dependencies listed in `requirements.txt`.
 
    ```shell
    $ pip install -r requirements.txt
    ```
 
-4. setup the flask environment variable in `.env`
+4. Setup the flask environment variable in `.env`.
 
    ```env
    SECRET_KEY=your_secret_key
@@ -83,21 +83,21 @@ After cloning the [repository](https://github.com/ssentinull/journal-recommender
    JOURNAL_DATA_OPEN_DIR=./static/journal_info
    ```
 
-5. deactivate and reactivate the virtual environment
+5. Deactivate and reactivate the virtual environment.
 
    ```shell
    $ deactivate
    $ source venv/bin/activate
    ```
 
-6. export the shell environment variables
+6. Export the shell environment variables.
 
    ```shell
    $ export FLASK_APP=server.py
    $ export FLASK_ENV=development
    ```
 
-7. run the app
+7. Run the app.
 
    ```shell
    $ flask run
@@ -107,20 +107,20 @@ After cloning the [repository](https://github.com/ssentinull/journal-recommender
 
 After configuring it locally, do the following steps every time you want to run the app:
 
-1. activate the virtual environment
+1. Activate the virtual environment.
 
    ```shell
    $ source venv/bin/activate
    ```
 
-2. export the shell environment variables
+2. Export the shell environment variables.
 
    ```shell
    $ export FLASK_APP=server.py
    $ export FLASK_ENV=development
    ```
 
-3. run the app
+3. Run the app.
 
    ```shell
    $ flask run
