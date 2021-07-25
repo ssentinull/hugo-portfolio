@@ -90,19 +90,6 @@ After cloning the [repository](https://github.com/ssentinull/journal-recommender
    $ source venv/bin/activate
    ```
 
-6. Export the shell environment variables.
-
-   ```shell
-   $ export FLASK_APP=server.py
-   $ export FLASK_ENV=development
-   ```
-
-7. Run the app.
-
-   ```shell
-   $ flask run
-   ```
-
 ## How to Run in Local Environment.
 
 After configuring it locally, do the following steps every time you want to run the app:
