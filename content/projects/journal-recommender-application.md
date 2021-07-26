@@ -25,20 +25,20 @@ This is a project for my Bachelor's thesis. The idea came up when I was casually
 - Only allows abstracts that consist of 100 - 350 words as input.
 - Recommends 12 different journals:
 
-| No. | Name                                                                                                          | Scope of Knowledge  |
-| --- | ------------------------------------------------------------------------------------------------------------- | ------------------- |
-| 1.  | [Jurnal Hortikultura](http://ejurnal.litbang.pertanian.go.id/index.php/jhort)                                 | Horticulture        |
-| 2.  | [Jurnal Penelitian Perikanan Indonesia](http://ejournal-balitbang.kkp.go.id/index.php/jppi)                   | Fisheries           |
-| 3.  | [Jurnal Riset Akuakultur](http://ejournal-balitbang.kkp.go.id/index.php/jra)                                  | Aquaculture         |
-| 4.  | [Jurnal Jalan-Jembatan](http://jurnal.pusjatan.pu.go.id/index.php/jurnaljalanjembatan)                        | Road Construction   |
-| 5.  | [Jurnal Penelitian Hasil Hutan](http://ejournal.forda-mof.org/ejournal-litbang/index.php/JPHH/index)          | Forestries          |
+| No. |                                                     Name                                                      | Scope of Knowledge  |
+| :-: | :-----------------------------------------------------------------------------------------------------------: | :-----------------: |
+| 1.  |                 [Jurnal Hortikultura](http://ejurnal.litbang.pertanian.go.id/index.php/jhort)                 |    Horticulture     |
+| 2.  |          [Jurnal Penelitian Perikanan Indonesia](http://ejournal-balitbang.kkp.go.id/index.php/jppi)          |      Fisheries      |
+| 3.  |                 [Jurnal Riset Akuakultur](http://ejournal-balitbang.kkp.go.id/index.php/jra)                  |     Aquaculture     |
+| 4.  |            [Jurnal Jalan-Jembatan](http://jurnal.pusjatan.pu.go.id/index.php/jurnaljalanjembatan)             |  Road Construction  |
+| 5.  |     [Jurnal Penelitian Hasil Hutan](http://ejournal.forda-mof.org/ejournal-litbang/index.php/JPHH/index)      |     Forestries      |
 | 6.  | [Jurnal Penelitian Hutan dan Konservasi Alam](http://ejournal.forda-mof.org/ejournal-litbang/index.php/JPHKA) | Forest Conservation |
-| 7.  | [E-Jurnal Medika Udayana](https://ojs.unud.ac.id/index.php/eum)                                               | Medical Sciences    |
-| 8.  | [Jurnal Simetris](https://jurnal.umk.ac.id/index.php/simet)                                                   | Technology          |
-| 9.  | [Jurnal Teknik ITS](http://ejurnal.its.ac.id/index.php/teknik)                                                | Technology          |
-| 10. | [Berita Kedokteran Masyarakat](https://jurnal.ugm.ac.id/bkm)                                                  | Public Health       |
-| 12. | [Indonesia Medicus Veterinus](https://ojs.unud.ac.id/index.php/imv/index)                                     | Veterinary          |
-| 13. | [Matriks Teknik Sipil](https://jurnal.uns.ac.id/matriks)                                                      | Civil Engineering   |
+| 7.  |                        [E-Jurnal Medika Udayana](https://ojs.unud.ac.id/index.php/eum)                        |  Medical Sciences   |
+| 8.  |                          [Jurnal Simetris](https://jurnal.umk.ac.id/index.php/simet)                          |     Technology      |
+| 9.  |                        [Jurnal Teknik ITS](http://ejurnal.its.ac.id/index.php/teknik)                         |     Technology      |
+| 10. |                         [Berita Kedokteran Masyarakat](https://jurnal.ugm.ac.id/bkm)                          |    Public Health    |
+| 12. |                   [Indonesia Medicus Veterinus](https://ojs.unud.ac.id/index.php/imv/index)                   |     Veterinary      |
+| 13. |                           [Matriks Teknik Sipil](https://jurnal.uns.ac.id/matriks)                            |  Civil Engineering  |
 
 ## Tools.
 
