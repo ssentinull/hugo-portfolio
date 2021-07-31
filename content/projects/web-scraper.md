@@ -14,6 +14,8 @@ In the case of this program, a single agent will traverse the table in http://si
 
 Since the is to collect Indonesian scientific journals and articles, the library [langdetect](https://pypi.org/project/langdetect/) is utilized to make sure that the text data that's scraped is Indonesian. This process is done by extracting the first two sentences of the paragraph and checking the language of both sentences. If the language of one of the two sentences is not Indonesian, then the paragraph would not be scraped.
 
+[Here](https://github.com/ssentinull/scientific-journal-web-scraper) is the link to access the Github repository.
+
 ## Background.
 
 This is a sub-project for my Bachelor's thesis. My main thesis project was to build a [Journal Recommender Application](/projects/journal-recommender-application/) using a Softmax Regression model as the classifier. But to create a machine learning model, I need to train the model using some sort of dataset. I tried searching for available dataset online that was relevant to my model, but none existed at the time. So, with the help of [thenewboston](https://www.youtube.com/watch?v=XjNm9bazxn8), I decided to create my own dataset.
