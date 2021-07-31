@@ -8,7 +8,7 @@ description: "A cli-based feature selection using the Chi-Square method."
 
 ## Description.
 
-A Chi-Square feature selection module based on the research done by Wang, D., Liang, Y., Xu, D., Feng, X., & Guan, R. [[1]](#reference) written in NodeJs that processes scientific journal abstract data. This module will determine the most dependent set of words to a given set of journals. The more dependent a word is on a journal, the more representative that word is to the journal. This module uses a version of the Chi-Square equation from [[1]](#reference) to calculate the dependence of a word to a journal based on the following formula :
+This is a Chi-Square feature selection module based on the research done by Wang, D., Liang, Y., Xu, D., Feng, X., & Guan, R. [[1]](#reference) that processes scientific journal abstract data, written in NodeJs. This module will determine the most dependent set of words to a given set of journals. The more dependent a word is on a journal, the more representative that word is to the journal. This module uses a version of the Chi-Square equation from [[1]](#reference) to calculate the dependence of a word to a journal based on the following formula :
 
 ![]()
 
@@ -27,17 +27,17 @@ Where :
 
 ## Background.
 
-This is a sub-project for my Bachelor's thesis. My main thesis project was to build a [Journal Recommender Application](/projects/journal-recommender-application/) using a Softmax Regression model as the classifier. I already gathered textual data using my [web scraper](/projects/web-scraper), but to make the text is still in the form of a complete paragraph. So to turn that text into features that can be learned by the model, I created this sub-project.
+This is a sub-project for my Bachelor's thesis. My main thesis project was to build a [Journal Recommender Application](/projects/journal-recommender-application/) using a Softmax Regression model as the classifier. I already gathered textual data online using my [Web Scraper](/projects/web-scraper), but the text is still in the form of complete paragraphs. So to turn the paragraphs into features that can be learned by the model, I created this sub-project.
 
 ## Features.
 
 - Aggregates 150 words with the highest Chi-Square value for each journal and remove any duplicate words.
 - Groups 150 words with the highest Chi-Square value for each journal by their respective journals.
-- Logs the **_A_**, **_B_**, **_C_**, **_D_** variables for each word to each journal as well as their Chi-Square value.
+- Logs the **_A_**, **_B_**, **_C_**, **_D_** variables for each word to each journal as well as their Chi-Square values.
 
 ## Input.
 
-The input file can be found in the `./data/input/` directory, which happens to be a `.json` file that stores a list of JSON objects with the following structure :
+The input file can be found in the `./data/input/` directory, which stores a list of JSON objects with the following structure :
 
 ```
 [
@@ -65,9 +65,9 @@ The input file can be found in the `./data/input/` directory, which happens to b
 
 ## Output.
 
-This module produces three different outputs that are saved in three different files:
+This module produces three different files with differing outputs:
 
-1. In the directory `./data/output/fv-tokens.json`. This file is used to save the 150 aggregated words with the highest Chi-Square value for each journal and removes any duplicate words.
+1. The file in the `./data/output/fv-tokens.json` directory is used to save the 150 aggregated words with the highest Chi-Square value for each journals and removes any duplicate words.
 
    ```
    [
@@ -84,7 +84,7 @@ This module produces three different outputs that are saved in three different f
    ]
    ```
 
-2. In the directory `./data/output/fv-tokens-by-journal.json`. This file is used to save the grouped 150 words with the highest Chi-Square values by their respectives journals.
+2. The file in the `./data/output/fv-tokens-by-journal.json` directory is used to save the 150 words with the highest Chi-Square values, grouped by their respectives journal IDs.
 
    ```
    {
@@ -111,7 +111,7 @@ This module produces three different outputs that are saved in three different f
    }
    ```
 
-3. In the directory `./data/output/chi-square-feature-vectors.json`. This file is used to log the **_A_**, **_B_**, **_C_**, **_D_**, journal ID and Chi-Square value for each word.
+3. The file in the `./data/output/chi-square-feature-vectors.json` directory is used to log the **_A_**, **_B_**, **_C_**, **_D_**, journal ID, and Chi-Square values for each word.
 
    ```
    [
