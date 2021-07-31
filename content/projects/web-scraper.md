@@ -1,6 +1,6 @@
 ---
 title: "Web Scraper."
-date: "2020-08-18"
+date: "2020-07-19"
 author: "ssentinull"
 tags: ["cli-program", "data-scraping", "python"]
 description: "A cli-based web scraper that scrapes data from Sinta & Garuda sites."

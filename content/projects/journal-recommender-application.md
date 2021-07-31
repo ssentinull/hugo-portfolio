@@ -1,6 +1,6 @@
 ---
 title: "Journal Recommender Application."
-date: "2020-08-18"
+date: "2020-08-01"
 author: "ssentinull"
 tags: ["web-app", "machine-learning", "python"]
 description: "A web-based application that recommends Indonesian scientific journals."

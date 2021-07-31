@@ -1,6 +1,6 @@
 ---
 title: "Chi-Square Feature Selection."
-date: "2020-08-15"
+date: "2020-07-19"
 author: "ssentinull"
 tags: ["cli-program", "data-processing", "node-js", "javascript"]
 description: "A cli-based feature selection using the Chi-Square method."
