@@ -1,6 +1,6 @@
 ---
 title: "Journal Recommender Application."
-date: "2020-08-18"
+date: "2020-08-01"
 author: "ssentinull"
 tags: ["web-app", "machine-learning", "python"]
 description: "A web-based application that recommends Indonesian scientific journals."
@@ -11,6 +11,8 @@ description: "A web-based application that recommends Indonesian scientific jour
 This web app recommends Indonesian scientific journals that best fit the user's scientific paper. The premise is quite simple: the user inputs the abstract for their scientific article, and the application outputs a list of journals ordered descendingly by how similar they are to the article in terms of percentages. It's able to do this because it utilizes a previously trained Softmax Regression model that's deployed to the web app.
 
 Softmax Regression is a version of Logistic Regression the switches the Sigmoid function in the output layer with a Softmax function. To put it simply, while a Logistic Regression model classifies the input data dichotomously (yes or no; cat or dog) with a 100% certainty, a Softmax Regression model classifies the input data multinomially (yes, no, or maybe; cat, dog, mouse, or bird) with differing percentages for each class. The model is trained on a dataset that was scraped from [SINTA](https://sinta.ristekbrin.go.id/) and [Garuda](https://garuda.ristekbrin.go.id/journal) using a [web scraper](/projects/web-scraper) that I built in conjunction with this web app, and the features of the dataset were selected using a Chi-Square feature selection program that I also built.
+
+[Here](https://github.com/ssentinull/journal-recommender-system-website) is the link for the Github repository and [here](https://sistem-rekomendasi-jurnal.herokuapp.com/) is the link for the demo of the app. The demo could be slow to start because I deployed it to the free version of Heroku and it takes time for the dyno to spin up if it hasn't been used in a while.
 
 ## Background.
 

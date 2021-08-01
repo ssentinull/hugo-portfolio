@@ -1,6 +1,6 @@
 ---
 title: "Web Scraper."
-date: "2020-08-18"
+date: "2020-07-19"
 author: "ssentinull"
 tags: ["cli-program", "data-scraping", "python"]
 description: "A cli-based web scraper that scrapes data from Sinta & Garuda sites."
@@ -13,6 +13,8 @@ This program is used to collect scientific articles' abstracts from journal site
 In the case of this program, a single agent will traverse the table in http://sinta.ristekbrin.go.id/journals and check each row for the `<img>` tag with the class `stat-garuda-small`. If the tag exists, the agent will go deeper by accessing the URL listed in the href property that's anchored to the <a> tag in that specific row. The agent will then traverse the table in said URL, scraping text data from the `<xmp>` tag with the class `abstract-article`. The script will append `"?page=2"` to the URL and increment the page number to continue traversing the following pages. Only after the pages have run out will the agent exit the nested traversal process and continue the main traversal process.
 
 Since the is to collect Indonesian scientific journals and articles, the library [langdetect](https://pypi.org/project/langdetect/) is utilized to make sure that the text data that's scraped is Indonesian. This process is done by extracting the first two sentences of the paragraph and checking the language of both sentences. If the language of one of the two sentences is not Indonesian, then the paragraph would not be scraped.
+
+[Here](https://github.com/ssentinull/scientific-journal-web-scraper) is the link to access the Github repository.
 
 ## Background.
 
