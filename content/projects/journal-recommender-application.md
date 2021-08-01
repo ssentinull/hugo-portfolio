@@ -2,7 +2,7 @@
 title: "Journal Recommender Application."
 date: "2020-08-01"
 author: "ssentinull"
-tags: ["web-app", "machine-learning", "python"]
+tags: ["web-app", "machine-learning", "flask", "python", "heroku"]
 description: "A web-based application that recommends Indonesian scientific journals."
 ---
 

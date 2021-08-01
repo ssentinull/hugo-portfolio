@@ -2,7 +2,7 @@
 title: "Jaga Sehat | Admin Application."
 date: "2018-07-10"
 author: "ssentinull"
-tags: ["mobile-app", "flutter", "dart", "firebase"]
+tags: ["mobile-app", "flutter", "dart", "firebase", "nosql"]
 description: "A mobile-based application to spread awareness regarding breast cancer through health literacy."
 ---
 

@@ -2,7 +2,7 @@
 title: "Character Building Season Website."
 date: "2018-02-01"
 author: "ssentinull"
-tags: ["web-app", "codeigniter", "php"]
+tags: ["web-app", "codeigniter", "php", "mysql", "cloud-hosting"]
 description: "A website used by new members of Himatif to evaluate their progress during orientation period."
 ---
 
