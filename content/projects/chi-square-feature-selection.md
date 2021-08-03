@@ -10,11 +10,7 @@ description: "A cli-based feature selection using the Chi-Square method."
 
 This is a Chi-Square feature selection module based on the research done by Wang, D., Liang, Y., Xu, D., Feng, X., & Guan, R. [[1]](#reference) that processes scientific journal abstract data, written in NodeJs. This module will determine the most dependent set of words to a given set of journals. The more dependent a word is on a journal, the more representative that word is to the journal. This module uses a version of the Chi-Square equation from [[1]](#reference) to calculate the dependence of a word to a journal based on the following formula :
 
-![]()
-
-![](<https://latex.codecogs.com/svg.latex?\LARGE&space;X_{(t,c)}^{2}\approx\frac{(A*D-B*C)^{2}}{(A+B)*(C+D)}>)
-
-![]()
+{{< image src="/img/chi-square-formula.svg" position="center" >}}
 
 Where :
 
