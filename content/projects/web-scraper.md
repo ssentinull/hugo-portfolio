@@ -38,7 +38,7 @@ The newly scraped data is saved in `./output/output.csv` directory with the head
 - [LangDetect](https://pypi.org/project/langdetect/)
 - [Requests](https://requests.readthedocs.io/en/master/)
 
-## How To Run in Local Environment.
+## How to Run in Local Environment.
 
 ```shell
 $ python3 scrape_web

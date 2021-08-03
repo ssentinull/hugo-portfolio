@@ -141,7 +141,7 @@ This module produces three different files with differing outputs:
 - [Lodash.UniqBy](https://www.npmjs.com/package/lodash.uniqby)
 - [Neat-CSV](https://www.npmjs.com/package/neat-csv)
 
-## How To Run in Local Environment.
+## How to Run in Local Environment.
 
 ```shell
 $ node src/index.js
