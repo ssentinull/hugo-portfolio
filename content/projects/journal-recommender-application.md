@@ -119,8 +119,8 @@ After configuring it locally, do the following steps every time you want to run 
 
 - Input validation
 
-  ![](https://media.giphy.com/media/J3SLW8RvR55zMea4h1/giphy.gif)
+  {{< image src="https://media.giphy.com/media/J3SLW8RvR55zMea4h1/giphy.gif" position="center" >}}
 
 - Recommendation result
 
-  ![](https://media.giphy.com/media/daJ6Z7uG5e8Four7Mj/giphy.gif)
+  {{< image src="https://media.giphy.com/media/daJ6Z7uG5e8Four7Mj/giphy.gif" position="center" >}}
