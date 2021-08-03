@@ -46,4 +46,4 @@ $ python3 scrape_web
 
 ## Demo.
 
-![](https://media.giphy.com/media/QwyKOyo6te9BsTdAMk/giphy.gif)
+{{< image src="https://media.giphy.com/media/QwyKOyo6te9BsTdAMk/giphy.gif" position="center" >}}
