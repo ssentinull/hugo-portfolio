@@ -149,7 +149,7 @@ $ node src/index.js
 
 ## Demo.
 
-![](https://media.giphy.com/media/Rf4xdYQHIW4vLBS66p/giphy.gif)
+{{< image src="https://media.giphy.com/media/Rf4xdYQHIW4vLBS66p/giphy.gif" position="center" >}}
 
 ## Reference. {#reference}
 
