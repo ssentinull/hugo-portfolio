@@ -35,29 +35,29 @@ This is a sub-project for my Bachelor's thesis. My main thesis project was to bu
 
 The input file can be found in the `./data/input/` directory, which stores a list of JSON objects with the following structure :
 
-```
+{{< code language="json" title="Input Data." id="1" isCollapsed="true" >}}
 [
-  {
-      "JOURNAL_ID": 0,
-      "JOURNAL_TITLE": "Jurnal Hortikultura",
-      "ARTICLE_ID": 0,
-      "ARTICLE_TITLE": "SISTEM TANAM TUMPANG SARI CABAI MERAH DENGAN ... DAN BUNCIS TEGAK ",
-      "ARTICLE_ABSTRACT": "Pola tanam tumpang sari merupakan salah satu cara untuk meningkatkan efisiensi ... tumpang sari cabai dengan kentang dan bawang merah merupakan usahatani yang paling menguntungkan terutama apabila dibandingkan dengan monokultur.",
-      "TOKENS": [ "pola", "tanam", "tumpang", "sari", "rupa", "salah", "tingkat", "efisiensi", ... , "tumpang", "sari", "usahatani", "tumpang", "sari", "cabai", "kentang", "bawang", "merah", "rupa", "usahatani", "untung", "utama", "banding", "monokultur" ],
-      "TOKENS_DUPLICATE_REMOVED": [ "pola", "tanam", "tumpang", "sari", "rupa", "salah", ... , "tumbuh", "vegetatif", "beda", "nyata", "tara", "untung", "bersih", "usahatani", "utama", "banding" ]
-  },
-  ... ,
-  {
-      "JOURNAL_ID": Number,
-      "JOURNAL_TITLE": String,
-      "ARTICLE_ID": Number,
-      "ARTICLE_TITLE": String,
-      "ARTICLE_ABSTRACT": String,
-      "TOKENS": Array,
-      "TOKENS_DUPLICATE_REMOVED": Array
-  }
+{
+"JOURNAL_ID": 0,
+"JOURNAL_TITLE": "Jurnal Hortikultura",
+"ARTICLE_ID": 0,
+"ARTICLE_TITLE": "SISTEM TANAM TUMPANG SARI CABAI MERAH DENGAN ... DAN BUNCIS TEGAK ",
+"ARTICLE_ABSTRACT": "Pola tanam tumpang sari merupakan salah satu cara untuk meningkatkan efisiensi ... tumpang sari cabai dengan kentang dan bawang merah merupakan usahatani yang paling menguntungkan terutama apabila dibandingkan dengan monokultur.",
+"TOKENS": [ "pola", "tanam", "tumpang", "sari", "rupa", "salah", "tingkat", "efisiensi", ... , "tumpang", "sari", "usahatani", "tumpang", "sari", "cabai", "kentang", "bawang", "merah", "rupa", "usahatani", "untung", "utama", "banding", "monokultur" ],
+"TOKENS_DUPLICATE_REMOVED": [ "pola", "tanam", "tumpang", "sari", "rupa", "salah", ... , "tumbuh", "vegetatif", "beda", "nyata", "tara", "untung", "bersih", "usahatani", "utama", "banding" ]
+},
+... ,
+{
+"JOURNAL_ID": Number,
+"JOURNAL_TITLE": String,
+"ARTICLE_ID": Number,
+"ARTICLE_TITLE": String,
+"ARTICLE_ABSTRACT": String,
+"TOKENS": Array,
+"TOKENS_DUPLICATE_REMOVED": Array
+}
 ]
-```
+{{< /code >}}
 
 ## Output.
 
@@ -65,73 +65,73 @@ This module produces three different files with differing outputs:
 
 1. The file in the `./data/output/fv-tokens.json` directory is used to save the 150 aggregated words with the highest Chi-Square value for each journals and removes any duplicate words.
 
-   ```
+   {{< code language="json" title="Aggregated words with the highest Chi-Square values from every journals." id="2" isCollapsed="true" >}}
    [
-     "tanam",
-     "balai",
-     "varietas",
-     "ulang",
-     "sayur",
-      ... ,
-     "kawat",
-     "struktur",
-     "superplasticizer",
-     "wulung"
+   "tanam",
+   "balai",
+   "varietas",
+   "ulang",
+   "sayur",
+   ... ,
+   "kawat",
+   "struktur",
+   "superplasticizer",
+   "wulung"
    ]
-   ```
+   {{< /code >}}
 
 2. The file in the `./data/output/fv-tokens-by-journal.json` directory is used to save the 150 words with the highest Chi-Square values, grouped by their respectives journal IDs.
 
-   ```
+   {{< code language="json" title="Words with the highest Chi-Square values for each journals." id="3" isCollapsed="true" >}}
    {
-     "0": [
-       "tanam",
-       "balai",
-       "varietas",
-       "ulang",
-       "sayur",
-        ... ,
-       "hasil",
-       "manggis",
-       "patogen"
-     ],
-     ... ,
-     "n_journals" : [
-       String,
-       String,
-       String,
-       ... ,
-       String,
-       String
-     ]
+   "0": [
+   "tanam",
+   "balai",
+   "varietas",
+   "ulang",
+   "sayur",
+   ... ,
+   "hasil",
+   "manggis",
+   "patogen"
+   ],
+   ... ,
+   "n_journals" : [
+   String,
+   String,
+   String,
+   ... ,
+   String,
+   String
+   ]
    }
-   ```
+   {{< /code >}}
 
 3. The file in the `./data/output/chi-square-feature-vectors.json` directory is used to log the **_A_**, **_B_**, **_C_**, **_D_**, journal ID, and Chi-Square values for each word.
 
-   ```
+   {{< code language="json" title="Chi-Square value & variables for every words from each journals." id="4" isCollapsed="true" >}}
    [
-     {
-       "JOURNAL_ID": 0,
-       "TOKEN": "tanam",
-       "A_VALUE": 626,
-       "B_VALUE": 501,
-       "C_VALUE": 137,
-       "D_VALUE": 6633,
-       "CHI_SQUARE": 2185638.198645179
-     },
-     ... ,
-     {
-       "JOURNAL_ID": Number,
-       "TOKEN": String,
-       "A_VALUE": Number,
-       "B_VALUE": Number,
-       "C_VALUE": Number,
-       "D_VALUE": Number,
-       "CHI_SQUARE": Number
-     }
+   {
+   "JOURNAL_ID": 0,
+   "TOKEN": "tanam",
+   "A_VALUE": 626,
+   "B_VALUE": 501,
+   "C_VALUE": 137,
+   "D_VALUE": 6633,
+   "CHI_SQUARE": 2185638.198645179
+   },
+   ... ,
+   {
+   "JOURNAL_ID": Number,
+   "TOKEN": String,
+   "A_VALUE": Number,
+   "B_VALUE": Number,
+   "C_VALUE": Number,
+   "D_VALUE": Number,
+   "CHI_SQUARE": Number
+   }
    ]
-   ```
+   {{< /code >}}
 
 ## Tools.
 
