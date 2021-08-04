@@ -2,7 +2,7 @@
 title: "Web Scraper."
 date: "2020-07-19"
 author: "ssentinull"
-tags: ["cli-program", "data-scraping", "python"]
+tags: ["cli-program", "data-scraping", "python", "json"]
 description: "A cli-based web scraper that scrapes data from Sinta & Garuda sites."
 ---
 
@@ -38,7 +38,7 @@ The newly scraped data is saved in `./output/output.csv` directory with the head
 - [LangDetect](https://pypi.org/project/langdetect/)
 - [Requests](https://requests.readthedocs.io/en/master/)
 
-## How To Run in Local Environment.
+## How to Run in Local Environment.
 
 ```shell
 $ python3 scrape_web
@@ -46,4 +46,4 @@ $ python3 scrape_web
 
 ## Demo.
 
-![](https://media.giphy.com/media/QwyKOyo6te9BsTdAMk/giphy.gif)
+{{< image src="https://media.giphy.com/media/QwyKOyo6te9BsTdAMk/giphy.gif" position="center" >}}
