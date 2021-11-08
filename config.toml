@@ -1,4 +1,5 @@
 baseurl = "/"
+enableEmoji = true
 languageCode = "en-us"
 paginate = 5
 theme = "hello-friend"
@@ -6,7 +7,7 @@ theme = "hello-friend"
 [params]
 contentTypeName = "posts"
 defaultTheme = "light"
-showMenuItems = 2
+showMenuItems = 3
 showReadingTime = false
 
 [languages]
@@ -29,13 +30,18 @@ writtenBy = "Written by"
 logoHomeLink = "/"
 logoText = "ssentinull"
 
-[languages.en.menu]
 [[languages.en.menu.main]]
-identifier = "about"
-name = "About"
-url = "/about"
+identifier = "blogs"
+name = "Blogs"
+url = "/blogs"
 
 [[languages.en.menu.main]]
 identifier = "projects"
 name = "Projects"
 url = "/projects"
+
+[languages.en.menu]
+[[languages.en.menu.main]]
+identifier = "about"
+name = "About"
+url = "/about"
