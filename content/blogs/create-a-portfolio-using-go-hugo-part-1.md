@@ -1,5 +1,5 @@
 ---
-title: "Create a Porfolio using Hugo | Part 1."
+title: "Create a Porfolio using Hugo."
 date: "2021-11-08"
 author: "ssentinull"
 cover: "img/blogs/create-a-portfolio-using-go-hugo-part-1/0.jpg"
@@ -12,7 +12,7 @@ This article will give you a step-by-step tutorial on how to create a beautiful 
 
 > :warning: **Disclaimer** :warning:
 >
-> This specific method of creating a blog using Hugo is not of my fruition, but of my friend's, therefore I feel obligated to give him credit. Shoutout to [fahmifan](https://github.com/fahmifan) for sharing his knowledge and allowing me to write about it in my blog. Please show some love for his [portfolio repo](https://github.com/fahmifan/fahmifan.github.io).
+> Shout-out to [fahmifan](https://github.com/fahmifan) for sharing his knowledge and allowing me to write about it in my blog. Please show some love for his [portfolio repo](https://github.com/fahmifan/fahmifan.github.io).
 
 ## Download Hugo.
 
@@ -22,7 +22,7 @@ Head over to Hugo's [installation page](https://gohugo.io/getting-started/instal
 $ sudo apt-get install hugo
 ```
 
-## Creating a new Hugo site.
+## Create a Hugo site.
 
 After installation would be the initialization of our workspace. Create a Hugo site and initialize a Git repository in that directory. Part two of this tutorial will include an automation process to deploy your portfolio to [Github static pages](https://pages.github.com/), so a Git repository is necessary.
 
@@ -38,7 +38,7 @@ Run the Hugo server in your CLI. If you don't see anything in your browser, don'
 $ hugo serve
 ```
 
-## Choosing a Theme.
+## Choose a Theme.
 
 Hugo provides a wide range of community-built themes in their [theme store](https://themes.gohugo.io/). Each theme is tagged which makes it easier to find the right theme that matches your preference and personality. I personally like simplicity and basic colors, so I use the [hello-friend](https://themes.gohugo.io/themes/hugo-theme-hello-friend/) theme.
 
@@ -54,7 +54,7 @@ When you browse the theme page you'll see a diverse set of themes, from the flam
 
 This looks great, but there are some things that I want to change about the looks, like the cursor color next to the "> hello friend" text and the default color scheme for example. We'll do that in the next step after we commit the changes that we've made.
 
-## Customizing a Theme.
+## Customize a Theme.
 
 Let's say that we want to change our color scheme from dark to light. We can do so from the `config.toml` file. To change it, simply change the `defaultTheme` value from `dark` to `light`.
 
@@ -103,7 +103,7 @@ $ git commit -m "feat: adding themes/ directory"
 $ git push origin master
 ```
 
-## Adding Contents.
+## Add Contents.
 
 Now that we got the appearance out of the way, let's continue to the main reason why we're making this site in the first place; to showcase yourself and your projects. We'll start with the former. In the navigation bar, there already exists a button that redirects you to the 'About' page. But if you click on it, Hugo will redirect you to a `404 Page Not Found` page. The reason is because that page doesn't exist yet.
 
