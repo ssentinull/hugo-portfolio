@@ -1,9 +1,9 @@
 ---
 title: "Create a Porfolio using Hugo | Part 1."
-date: "2021-10-02"
+date: "2021-11-08"
 author: "ssentinull"
 cover: "img/blogs/create-a-portfolio-using-go-hugo-part-1/0.jpg"
-description: "Create a beatiful portfolio in minutes using Hugo."
+description: "Create a beatiful portfolio in less than an hour using Hugo."
 ---
 
 ## Introduction.
