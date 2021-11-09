@@ -275,6 +275,6 @@ Voila! :tada: :confetti_ball: You have successfully created your very own portfo
 
 In less than an hour you've created yourself a beautiful, customizable portfolio website using Hugo. Now it's up to you to get creative with it by tweaking the themes and adding your own contents to it.
 
-I hope this could be beneficial to you. Thank you for taking your time to read this article. :pray:
+I hope this could be beneficial to you. Thank you for taking the time to read this article. :pray:
 
 -- ssentinull
