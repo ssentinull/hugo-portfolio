@@ -2,7 +2,7 @@
 title: "Create a Porfolio using Hugo."
 date: "2021-11-08"
 author: "ssentinull"
-cover: "img/blogs/create-a-portfolio-using-go-hugo-part-1/0.jpg"
+cover: "img/blogs/create-a-portfolio-using-hugo/0.jpg"
 description: "Create a beatiful portfolio in less than an hour using Hugo."
 ---
 
@@ -50,7 +50,7 @@ $ git submodule add https://github.com/your_account_name/hugo-theme-hello-friend
 
 When you browse the theme page you'll see a diverse set of themes, from the flamboyant to the plain, from the colorful to the pale. Even though they all may look different, all of them are configured using the same file, `config.toml`. The configurations for each theme can be found on their respective theme page. As for the hello-friend theme, you can find it right [here](https://themes.gohugo.io/themes/hugo-theme-hello-friend/#how-to-configure). Copy-paste the values to our local `config.toml` and your page should look like this.
 
-{{< image src="/img/blogs/create-a-portfolio-using-go-hugo-part-1/1.png" position="center" >}}
+{{< image src="/img/blogs/create-a-portfolio-using-hugo/1.png" position="center" >}}
 
 This looks great, but there are some things that I want to change about the looks, like the cursor color next to the "> hello friend" text and the default color scheme for example. We'll do that in the next step after we commit the changes that we've made.
 
@@ -58,7 +58,7 @@ This looks great, but there are some things that I want to change about the look
 
 Let's say that we want to change our color scheme from dark to light. We can do so from the `config.toml` file. To change it, simply change the `defaultTheme` value from `dark` to `light`.
 
-{{< image src="/img/blogs/create-a-portfolio-using-go-hugo-part-1/2.png" position="center" >}}
+{{< image src="/img/blogs/create-a-portfolio-using-hugo/2.png" position="center" >}}
 
 However, changing the cursor color won't be as simple as that. The cursor color is not set to be modifiable through the `config.toml` by the theme's creator, so we need to make changes to the source code. Because the theme is a separate repository from our workspace, we need to make the changes from the theme's repository, not from our workspace. To make sure our changes don't conflict with future updates to the theme, we make our changes in a separate feature branch, so that if there were updates we could simply rebase our feature branch. We'll call this branch `portfolio`. Make sure you also define the branch from which you want to pull the submodules next time you initialize a fresh clone of this repo by adding `branch = portfolio` to `.gitmodules`.
 
@@ -92,7 +92,7 @@ $ yarn build
 $ git push -u origin portfolio
 ```
 
-{{< image src="/img/blogs/create-a-portfolio-using-go-hugo-part-1/3.png" position="center" >}}
+{{< image src="/img/blogs/create-a-portfolio-using-hugo/3.png" position="center" >}}
 
 Even though we've created a separate repo for our theme and pushed it to its origin, we haven't added it to our workspace's repo. We need to change directory back to our workspace repo, add the theme directory, commit it, then push it to Github.
 
@@ -169,7 +169,7 @@ Lipsum:
 
 After you paste the code above and reload the page, the page should exist.
 
-{{< image src="/img/blogs/create-a-portfolio-using-go-hugo-part-1/4.png" position="center" >}}
+{{< image src="/img/blogs/create-a-portfolio-using-hugo/4.png" position="center" >}}
 
 We're done with our self-introduction page, now let's move on to our projects page. The concept of the projects page is similar to the about page with minor differences and few modifications. First, we need to change the text in the navigation bar from `showcase` to `projects` by modifying the `config.toml` file.
 
@@ -267,9 +267,9 @@ logoText = "hello friend"
 
 {{< /code >}}
 
-{{< image src="/img/blogs/create-a-portfolio-using-go-hugo-part-1/5.png" position="center" >}}
+{{< image src="/img/blogs/create-a-portfolio-using-hugo/5.png" position="center" >}}
 
-{{< image src="/img/blogs/create-a-portfolio-using-go-hugo-part-1/6.png" position="center" style="margin-top: 40px;" >}}
+{{< image src="/img/blogs/create-a-portfolio-using-hugo/6.png" position="center" style="margin-top: 40px;" >}}
 
 Voila! :tada: :confetti_ball: You have successfully created your very own portfolio! :fire::fire:
 

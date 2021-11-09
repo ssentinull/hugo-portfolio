@@ -2,13 +2,13 @@
 title: "Auto-Deploy Portfolio to Github Pages."
 date: "2021-11-09"
 author: "ssentinull"
-cover: "img/blogs/create-a-portfolio-using-go-hugo-part-2/0.jpg"
+cover: "img/blogs/auto-deploy-portfolio-to-github-pages/0.jpg"
 description: "Effortlessly deploy static pages to Github Pages using Shell scripts."
 ---
 
 ## Introduction.
 
-In the [previous article](/blogs/create-a-portfolio-using-go-hugo-part-1), we've covered how to create a beautiful portfolio using Hugo in less than an hour. But what good is it to have an awesome portfolio if no one can see it? So in this article, I'll be showing you how to set up an automatic deployment flow that will deploy to Github Pages using shell scripts.
+In the [previous article](/blogs/create-a-portfolio-using-hugo), we've covered how to create a beautiful portfolio using Hugo in less than an hour. But what good is it to have an awesome portfolio if no one can see it? So in this article, I'll be showing you how to set up an automatic deployment flow that will deploy to Github Pages using shell scripts.
 
 > :warning: **Disclaimer** :warning:
 >
@@ -79,7 +79,7 @@ $ git push origin master # default branch could be main / master
 
 If your repo name is `username.github.io` then Github should automatically enable Github Pages for that repo. But if it isn't, then you can go to Settings -> Pages and enable it there.
 
-{{< image src="/img/blogs/create-a-portfolio-using-go-hugo-part-2/1.png" position="center" >}}
+{{< image src="/img/blogs/auto-deploy-portfolio-to-github-pages/1.png" position="center" >}}
 
 We've successfully deployed our portfolio to Github Pages!! :tada: :confetti_ball: It wasn't that difficult, right? But then again, if we have to push to multiple repos to deploy our portfolio everytime we make a change could be rather cumbersome. Thankfully, there's a way to automate it.
 
