@@ -2,7 +2,7 @@
 title: "An Introduction."
 date: "2021-07-11"
 author: "ssentinull"
-cover: "img/road.jpg"
+cover: "img/introduction.jpg"
 description: "For those wondering what this site is all about."
 ---
 
