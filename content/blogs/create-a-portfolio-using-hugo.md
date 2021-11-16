@@ -10,7 +10,7 @@ description: "Create a beatiful portfolio in less than an hour using Hugo."
 
 This article will give you a step-by-step tutorial on how to create a beautiful web-based portfolio using Hugo.
 
-> :warning: **Disclaimer** :warning:
+> :mega: **Shout-out** :mega:
 >
 > Shout-out to [fahmifan](https://github.com/fahmifan) for sharing his knowledge and allowing me to write about it in my blog. Please show some love for his [portfolio repo](https://github.com/fahmifan/fahmifan.github.io).
 
