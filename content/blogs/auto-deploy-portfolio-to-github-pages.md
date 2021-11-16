@@ -1,16 +1,16 @@
 ---
-title: "Auto-Deploy Portfolio to Github Pages."
+title: "Deploy your Portfolio to Github Pages."
 date: "2021-11-09"
 author: "ssentinull"
 cover: "img/blogs/auto-deploy-portfolio-to-github-pages/0.jpg"
-description: "Effortlessly deploy static pages to Github Pages using Shell scripts."
+description: "Effortlessly deploy static content to Github Pages."
 ---
 
 ## Introduction.
 
 In the [previous article](/blogs/create-a-portfolio-using-hugo), we've covered how to create a beautiful portfolio using Hugo in less than an hour. But what good is it to have an awesome portfolio if no one can see it? So in this article, I'll be showing you how to set up an automatic deployment flow that will deploy to Github Pages using shell scripts.
 
-> :warning: **Disclaimer** :warning:
+> :mega: **Shout-out** :mega:
 >
 > Shout-out to [fahmifan](https://github.com/fahmifan) for sharing his knowledge and allowing me to write about it in my blog. Please show some love for his [portfolio repo](https://github.com/fahmifan/hugo-blog).
 
@@ -37,13 +37,16 @@ $ cat ~/.ssh/id_ed25519.pub
 
 If the commands above aren't clear enough, [this](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) guide shows you how to generate an SSH key and [this](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) guide shows you how to add the SSH key to your Github account.
 
-## Clone your Portfolio via SSH.
+## Change Remote Host to SSH.
 
-Because we'll be using SSH to push our changes, we need to clone the repo via SSH.
+If your repo's remote origin is HTTPS, make sure to change it to SSH. We need to do this because we'll be using SSH to automatically push our changes to our remote, which we'll cover later in this tutorial.
 
 ```shell
-# use SSH URL instead of HTTPS URL
-$ git clone git@github.com:IbnuAhsani/hugo-portfolio-article.git
+# checks whether our remote is HTTPS or SSH
+$ git remote -v
+
+# changes the remote host from HTTPS to SSH
+$ git remote set-url origin git@github.com:IbnuAhsani/hugo-portfolio-article.git
 ```
 
 ## Create a Repo based on your Username.

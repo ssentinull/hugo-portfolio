@@ -5,7 +5,7 @@ paginate = 5
 theme = "hello-friend"
 
 [params]
-contentTypeName = "posts"
+contentTypeName = "blogs"
 defaultTheme = "light"
 showMenuItems = 3
 showReadingTime = false
