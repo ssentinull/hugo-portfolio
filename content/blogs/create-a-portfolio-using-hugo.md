@@ -1,5 +1,5 @@
 ---
-title: "Create a Porfolio using Hugo."
+title: "Create a Portfolio using Hugo."
 date: "2021-11-08"
 author: "ssentinull"
 cover: "img/blogs/create-a-portfolio-using-hugo/0.jpg"

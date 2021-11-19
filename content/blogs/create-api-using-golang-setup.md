@@ -2,8 +2,8 @@
 title: "Create APIs using Golang | Part 1 : Workspace Setup."
 date: "2021-11-16"
 author: "ssentinull"
-cover: "img/blogs/create-api-using-golang-setup/0.jpeg"
-description: "Effortlessly deploy static content to Github Pages."
+cover: "img/blogs/create-api-using-golang-setup/0.jpg"
+description: "A good workspace will go a long way."
 ---
 
 ## Introduction.
