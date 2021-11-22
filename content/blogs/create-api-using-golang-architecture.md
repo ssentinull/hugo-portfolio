@@ -1,6 +1,5 @@
 ---
 title: "Create APIs using Golang | Part 2 : Application Architecture."
-date: "2021-11-17"
 author: "ssentinull"
 cover: "img/blogs/create-api-using-golang-architecture/0.jpg"
 description: "A good workspace will go a long way."
