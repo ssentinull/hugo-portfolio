@@ -1,210 +1,361 @@
 ---
 title: "Create APIs using Golang | Part 2 : Application Architecture."
+date: "2021-11-22"
 author: "ssentinull"
 cover: "img/blogs/create-api-using-golang-architecture/0.jpg"
-description: "A good workspace will go a long way."
+description: "Architecture applies just as much in software as it does in buildings."
 ---
 
 ## Introduction.
 
-According to a [2021 survey](https://insights.stackoverflow.com/survey/2021#section-most-popular-technologies-programming-scripting-and-markup-languages) conducted by StackOverflow, Golang is number fourteen in terms of the most used language/tool amongst developers, right above Kotlin and below PowerShell. This is for good reasons. Its no-frills syntax, static typing, out-of-the-box build tools, and performant concurrency are a few reasons why developers, including me, prefer it over the rest. In this series of tutorials, we'll cover how to build APIs using Golang.
+In the [previous](/blogs/create-api-using-golang-setup/) article, we've set up our workspace that will our developing experience more pleasant. Now it's time to develop the app itself. However, there is one thing I want to point out before we proceed, and that is Clean Architecture.
 
-## Project Description.
+## What is Architecture.
 
-We'll be creating a simple project that revolves around the concept of libraries. The APIs will allow us to get a catalog of books, filter books according to multiple categories, get the detailed information regarding each book, as well as borrow and return them. Seems straightforward, right?
+Before jumping to Clean Architecture, let's discuss what an 'architecture' actually is. Different experts have different definitions of what architecture exactly is. Some say it's 'the fundamental organization of a system' while others define it as 'the way the highest level components are wired together. Since I'm nowhere near to being an expert, I'll just have to defer to the definition provided by the experts, which in essence is 'how we organize our system'.
 
-## Initialize Dependencies.
+## Why bother with Architecture.
 
-We'll use [Go Modules](https://go.dev/blog/using-go-modules) as our dependency management system and a couple of dependencies for our project:
+The quote below sums up why architecture is important.
 
-- [Echo](https://echo.labstack.com/) : performant and minimalist web framework
-- [Godotenv](https://github.com/joho/godotenv) : .env variables library
-- [Logrus](https://github.com/sirupsen/logrus) : structured and pluggable logging library
+> _"A poor architecture is a major contributor to the growth of cruft - elements of the software that impede the ability of developers to understand the software. Software that contains a lot of cruft is much harder to modify, leading to features that arrive more slowly and with more defects."_
+>
+> -- **Martin Fowler, 2019**
 
-```shell
-$ git init
-$ go mod init github.com/your_github_username/create-apis-using-golang
-$ go get github.com/labstack/echo/v4
-$ go get github.com/joho/godotenv
-$ go get github.com/sirupsen/logrus
-```
+## What is Clean Architecture.
 
-## Plan Codebase Layout.
+Clean Architecture is a concept forwarded by Robert C. Martin (Uncle Bob) in 2021. It takes a layered approach, where a system is divided into multiple layers, each having its roles and rules it must abide by. If drawn into a diagram, Clean Architecture would look like the cross-section of Earth, where Earth's core would be the innermost circle, and encapsulating it are the numerous layers that make up the Earth's mantle.
 
-Codebase layout might be insignificant at first glance, but trust me when I say this, it will hinder your productivity in the long run if you don't carefully plan it in the beginning. That's why I suggest following the highly rated ones instead of just creating your own from scratch, especially if you don't have a plan of how to structure your layout. In this series, we'll be using the [Go Standard Layout](https://github.com/golang-standards/project-layout), with some modifications of course. The Github page provides thorough explanations and examples behind the reasoning of the layout and based on the repo's 27k+ stars, I think it's a great place to start.
+{{< figure src="/img/blogs/create-api-using-golang-architecture/1.jpg" position="center" caption="Clean Architecture Diagram" >}}
 
-## Create Sample Web Server.
+This layering technique produces a system that's testable, independent of frameworks, independent of UI, independent of database, and independent of any external agency. The rule of this architecture is very straightforward; source code dependencies can only point inwards. In other words, the inner circle can know nothing about the outer circle, while something declared in the outer circle can not be mentioned in the inner circle.
 
-To run a sample web server, create a `main.go` inside a `/cmd/server` directory. This dir is used to house our project's main application and nothing else. Our main application should only comprise mostly imports from our modules.
+As seen in the diagram above, the architecture comprises of four layers:
 
-{{< code language="go" title="main.go" id="1" isCollapsed="true" >}}
+1. Entities - business rules in the form of objects with methods, or a set of data structures with functions.
+2. Use Cases - manages the flow of data to and from entities.
+3. Interface Adapters - converts use cases' or entities' data format to external agency's data format.
+4. Frameworks and Drives - consists of external frameworks and tools.
 
-package main
+## Implementing Entities.
 
-import (
+In our project, we'll refer to 'entities' as 'models'. Since we're making a library app, we'll be dealing with books, so a book is our entity. For the book entity, let's just use the most basic property that a book has, plus a couple of necessary attributes for our database; ID, Title, Author, Description, Published At, Created At, Updated At, Deleted At. Referring back to the [Golang Standard Layout](https://github.com/golang-standards/project-layout), all modules that are meant to be exported must be placed in the `/pkg` dir. So, we create a `/pkg/model`, a place where all future entities will reside, and place `book.go` there.
 
-    "log"
-    "net/http"
-    "time"
+{{< code language="go" title="book.go" id="1" isCollapsed="true" >}}
 
-    "github.com/labstack/echo/v4"
+package model
 
-)
+import "time"
 
-func main() {
+type Book struct {
 
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    	return c.String(http.StatusOK, "Hello, World!")
-    })
-
-    s := &http.Server{
-    	Addr:         ":8080",
-    	ReadTimeout:  2 * time.Minute,
-    	WriteTimeout: 2 * time.Minute,
-    }
-
-    log.Fatal(e.StartServer(s))
+    ID          int64     `json:"id"`
+    Title       string    `json:"title"`
+    Author      string    `json:"author"`
+    Description string    `json:"description"`
+    PublishedAt time.Time `json:"published_at"`
+    CreatedAt   time.Time `json:"created_at"`
+    UpdatedAt   time.Time `json:"updated_at"`
+    DeletedAt   time.Time `json:"deleted_at"`
 
 }
 
 {{< /code >}}
 
-{{< image src="/img/blogs/create-api-using-golang-setup/1.png" position="center" >}}
+## Implementing Repositories.
 
-## Configure Logging Parameters.
+Indeed, repository is not stated in Uncle Bob's diagram, but we need this as a layer that connects to our database. If we're to draw this layer on the diagram, it would be between entities and use case layer, hence making it accessible to use cases and adapters while making it only dependent on entities.
 
-To catch any errors our project might have, we need a way to effectively log our server. Thankfully, Logrus's got our back. All we need to do is set our logging parameters in our `main.go` and the configurations will be used every time we log anything in our console.
+Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
 
-{{< code language="go" title="main.go" id="3" isCollapsed="true" >}}
+{{< code language="go" title="book.go" id="2" isCollapsed="true" >}}
 
-package main
+package model
+
+import (
+
+    "context"
+    "time"
+
+)
+
+type Book struct {
+
+    ID          int64     `json:"id"`
+    Title       string    `json:"title"`
+    Author      string    `json:"author"`
+    Description string    `json:"description"`
+    PublishedAt time.Time `json:"published_at"`
+    CreatedAt   time.Time `json:"created_at"`
+    UpdatedAt   time.Time `json:"updated_at"`
+    DeletedAt   time.Time `json:"deleted_at"`
+
+}
+
+type BookRepository interface {
+
+    ReadBookByID(context.Context, int64) (Book, error)
+    ReadBooks(context.Context) ([]Book, error)
+
+}
+
+{{< /code >}}
+
+Differing from the intention of `/pkg/model` directory, we'll create a `/pkg/book` directory to signify that all the codes within it are of the 'book' domain. If there are new entities, we'll create separate domains for them.
+
+Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We create a `/postgres` dir as a means of separation. If in the future we would like to use another database for the 'book' domain, let's say MongoDB, then we'll create a `/mongodb` inside the `/repository` dir. Create `book_repository_postgres.go` inside this dir.
+
+{{< code language="go" title="book_repository_postgres.go" id="3" isCollapsed="true" >}}
+
+package postgres
+
+import (
+
+    "context"
+    "time"
+
+    "github.com/ssentinull/create-apis-using-golang/pkg/model"
+
+)
+
+type bookRepo struct{}
+
+func NewBookRepository() model.BookRepository {
+
+    return &bookRepo{}
+
+}
+
+func (br *bookRepo) ReadBookByID(ctx context.Context, ID int64) (model.Book, error) {
+
+    book := model.Book{
+
+    	ID:          ID,
+    	Title:       "Harry Potter",
+    	Author:      "J. K. Rowling",
+    	Description: "A book about wizards",
+    	PublishedAt: time.Now(),
+    	CreatedAt:   time.Now(),
+    }
+
+    return book, nil
+
+}
+
+func (br *bookRepo) ReadBooks(ctx context.Context) ([]model.Book, error) {
+
+    books := []model.Book{
+
+    	{
+    		ID:          1,
+    		Title:       "Harry Potter",
+    		Author:      "J. K. Rowling",
+    		Description: "A book about wizards",
+    		PublishedAt: time.Now(),
+    		CreatedAt:   time.Now(),
+    	},
+    	{
+    		ID:          2,
+    		Title:       "The Hobbit",
+    		Author:      "J. R. R. Tolkien",
+    		Description: "A book about hobbits",
+    		PublishedAt: time.Now(),
+    		CreatedAt:   time.Now(),
+    	},
+    }
+
+    return books, nil
+
+}
+
+{{< /code >}}
+
+Since we haven't established a database connection, we'll use dummy data in our repository as an example. Ideally, this layer will only be filled with CRUD queries to our database.
+
+## Implementing Usecases.
+
+The use case layer should only involve data flow logic and calls to the repository layer. Just like the repository layer, we have to define a book use case interface in the book model.
+
+{{< code language="go" title="book.go" id="4" isCollapsed="true" >}}
+
+package model
+
+import (
+
+    "context"
+    "time"
+
+)
+
+type Book struct {
+
+    ID          int64     `json:"id"`
+    Title       string    `json:"title"`
+    Author      string    `json:"author"`
+    Description string    `json:"description"`
+    PublishedAt time.Time `json:"published_at"`
+    CreatedAt   time.Time `json:"created_at"`
+    UpdatedAt   time.Time `json:"updated_at"`
+    DeletedAt   time.Time `json:"deleted_at"`
+
+}
+
+type BookUsecase interface {
+
+    GetBookByID(context.Context, int64) (Book, error)
+    GetBooks(context.Context) ([]Book, error)
+
+}
+
+type BookRepository interface {
+
+    ReadBookByID(context.Context, int64) (Book, error)
+    ReadBooks(context.Context) ([]Book, error)
+
+}
+
+{{< /code >}}
+
+Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This example might be barren because we only implement simple retrieval functions. In production-level applications, this layer could include much more complicated logic that involves repositories from multiple domains.
+
+{{< code language="go" title="book_usecase.go" id="5" isCollapsed="true" >}}
+
+package usecase
+
+import (
+
+    "context"
+    "encoding/json"
+
+    "github.com/sirupsen/logrus"
+    "github.com/ssentinull/create-apis-using-golang/pkg/model"
+
+)
+
+type bookUsecase struct {
+
+    bookRepo model.BookRepository
+
+}
+
+func NewBookUsecase(br model.BookRepository) model.BookUsecase {
+
+    return &bookUsecase{bookRepo: br}
+
+}
+
+func (bu *bookUsecase) GetBookByID(ctx context.Context, ID int64) (model.Book, error) {
+
+    book, err := bu.bookRepo.ReadBookByID(ctx, ID)
+    if err != nil {
+    	c, err := json.Marshal(ctx)
+    	if err != nil {
+    		logrus.Error(err)
+    	}
+
+    	logrus.WithFields(logrus.Fields{
+    		"ctx": c,
+    		"ID":  ID,
+    	}).Error(err)
+
+    	return model.Book{}, err
+    }
+
+    return book, nil
+
+}
+
+func (bu *bookUsecase) GetBooks(ctx context.Context) ([]model.Book, error) {
+
+    books, err := bu.bookRepo.ReadBooks(ctx)
+    if err != nil {
+    	c, err := json.Marshal(ctx)
+    	if err != nil {
+    		logrus.Error(err)
+    	}
+
+    	logrus.WithField("ctx", c).Error(err)
+
+    	return nil, err
+    }
+
+    return books, nil
+
+}
+
+{{< /code >}}
+
+## Implementing Presenters.
+
+The presenters' role is to format data to and from our application. Since we're creating REST APIs, we'll format our data to JSON. The data to be formatted is retrieved from the previous layer, the use case layer. In a similar fashion to our repository layer, we'll create a `/pkg/book/handler/http` dir as a means of separation, if in the future we'd want to use a different method of presenting data, such as through CLI or RPC.
+
+{{< code language="go" title="book_handler_http.go" id="6" isCollapsed="true" >}}
+
+package http
 
 import (
 
     "net/http"
-    "os"
-    "time"
+    "strconv"
 
     "github.com/labstack/echo/v4"
     "github.com/sirupsen/logrus"
+    "github.com/ssentinull/create-apis-using-golang/pkg/model"
 
 )
 
-// initialize logger configurations
-func initLogger() {
+type BookHTTPHandler struct {
 
-    logrus.SetFormatter(&logrus.TextFormatter{
-    	ForceColors:     true,
-    	DisableSorting:  true,
-    	DisableColors:   false,
-    	FullTimestamp:   true,
-    	TimestampFormat: "15:04:05 02-01-2006",
-    })
-
-    logrus.SetOutput(os.Stdout)
-    logrus.SetReportCaller(true)
-    logrus.SetLevel(logrus.ErrorLevel)
+    BookUsecase model.BookUsecase
 
 }
 
-// run initLogger() before running main()
-func init() {
+func NewBookHTTPHandler(e *echo.Echo, bu model.BookUsecase) {
 
-    initLogger()
+    handler := BookHTTPHandler{BookUsecase: bu}
+
+    g := e.Group("/v1")
+    g.GET("/books", handler.FetchBooks)
+    g.GET("/books/:ID", handler.FetchBookByID)
 
 }
 
-func main() {
+func (bh *BookHTTPHandler) FetchBooks(c echo.Context) error {
 
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
-    })
+    books, err := bh.BookUsecase.GetBooks(c.Request().Context())
+    if err != nil {
+    	logrus.Error(err)
 
-    s := &http.Server{
-    	Addr:         ":8080",
-    	ReadTimeout:  2 * time.Minute,
-    	WriteTimeout: 2 * time.Minute,
+    	return c.JSON(http.StatusInternalServerError, err.Error())
     }
 
-    logrus.Fatal(e.StartServer(s))
+    return c.JSON(http.StatusOK, books)
 
 }
 
-{{< /code >}}
+func (bh *BookHTTPHandler) FetchBookByID(c echo.Context) error {
 
-## Use Environment Variables.
+    ID, err := strconv.ParseInt(c.Param("ID"), 10, 64)
+    if err != nil {
+    	logrus.Error(err)
 
-Currently, the server is running on port `8080` and it's hard-coded into the server instance. Since the port number used might change depending on the server's used ports, we need to set that value as an environment variable. Environment variables are used to store interchangeable values, account credentials, and other secrets that we don't want everyone to know.
-
-What we need to do is create a `.env.example` in the root dir that will be used as a template for env variables in case someone else clones our repo. Also, create a `.gitignore` to ignore `.env` files from being committed to our repo.
-
-{{< code language="env" title=".env.example" id="4" isCollapsed="true" >}}
-
-ENV=
-SERVER_PORT=
-
-{{< /code >}}
-
-{{< code language="gitignore" title=".gitignore" id="5" isCollapsed="true" >}}
-
-.env
-
-{{< /code >}}
-
-Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080` for `ENV` and `SERVER_PORT` respectively. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to store "configuration file templates or default configs". So we'll use this dir to place our getter functions in a file called `env.go` and call the functions in `main.go`.
-
-{{< code language="go" title="env.go" id="6" isCollapsed="true" >}}
-
-package config
-
-import (
-
-    "fmt"
-    "os"
-
-    "github.com/joho/godotenv"
-    "github.com/sirupsen/logrus"
-
-)
-
-func init() {
-
-    env := os.Getenv("ENV")
-    if env != "dev" && env != "" {
-    	logrus.Warn("running using OS env variables")
-
-    	return
+    	return c.JSON(http.StatusBadRequest, "url param is faulty")
     }
 
-    if err := godotenv.Load(); err != nil {
-    	logrus.Warn(".env file not found")
+    book, err := bh.BookUsecase.GetBookByID(c.Request().Context(), ID)
+    if err != nil {
+    	logrus.Error(err)
 
-    	return
+    	return c.JSON(http.StatusInternalServerError, err.Error())
     }
 
-    logrus.Warn("running using .env file")
-
-    return
-
-}
-
-// Env returns Env in .env
-func Env() string {
-
-    return fmt.Sprintf("%s", os.Getenv("ENV"))
-
-}
-
-// ServerPort returns the server port in .env
-func ServerPort() string {
-
-    return fmt.Sprintf("%s", os.Getenv("SERVER_PORT"))
+    return c.JSON(http.StatusOK, book)
 
 }
 
 {{< /code >}}
+
+We use a `/v1` endpoint prefix as a safety net where our API consumers can quickly roll back if ever our new version has a critical bug. The final step would be to import our modules to the main app.
 
 {{< code language="go" title="main.go" id="7" isCollapsed="true" >}}
 
@@ -219,6 +370,9 @@ import (
     "github.com/labstack/echo/v4"
     "github.com/sirupsen/logrus"
     "github.com/ssentinull/create-apis-using-golang/config"
+    _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/pkg/book/handler/http"
+    _bookRepo "github.com/ssentinull/create-apis-using-golang/pkg/book/repository/postgres"
+    _bookUcase "github.com/ssentinull/create-apis-using-golang/pkg/book/usecase"
 
 )
 
@@ -255,9 +409,10 @@ func init() {
 func main() {
 
     e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    	return c.String(http.StatusOK, "Hello, World!")
-    })
+
+    bookRepo := _bookRepo.NewBookRepository()
+    bookUsecase := _bookUcase.NewBookUsecase(bookRepo)
+    _bookHTTPHndlr.NewBookHTTPHandler(e, bookUsecase)
 
     s := &http.Server{
     	Addr:         ":" + config.ServerPort(),
@@ -271,36 +426,26 @@ func main() {
 
 {{< /code >}}
 
-## Setup Daemons. :smiling_imp:
+You're all set. Now run your server, open Postman, and try hitting `localhost:8080/v1/books` and `localhost:8080/v1/books/1`.
 
-To make our life easier, we need to set up a daemon that listens to changes made in the workspace so that the server can automatically restart itself on saved changes. We do this by installing [Modd](https://github.com/cortesi/modd) and setting it to listen to files with `.go` extensions. Create a `.modd` dir and within it a `server.modd.conf` file. Also, create a `Makefile` in the root dir to abbreviate our CLI command.
+{{< figure src="/img/blogs/create-api-using-golang-architecture/2.png" position="center" caption="" >}}
 
-{{< code language="conf" title="server.modd.conf" id="8" isCollapsed="true" >}}
+{{< figure src="/img/blogs/create-api-using-golang-architecture/3.png" position="center" caption="" >}}
 
-**/\*.go !**/\*\_test.go {
-daemon +sigterm: go run cmd/server/main.go
-}
+By this step, your directory should look like this.
 
-{{< /code >}}
+{{< image src="/img/blogs/create-api-using-golang-architecture/4.png" position="center" >}}
 
-{{< code language="makefile" title="Makefile" id="9" isCollapsed="true" >}}
-
-# command to run the server in daemon mode
-
-run-server:
-@modd -f ./.modd/server.modd.conf
-
-{{< /code >}}
-
-```shell
-# run the server in daemon mode
-$ make run-server
-```
-
-{{< image src="/img/blogs/create-api-using-golang-setup/2.png" position="center" >}}
-
-Our workspace is now complete!! :rocket: The next step would be the meat and potatoes of this series, which is building the logic of the APIs.
+Congrats!! :partying_face: You've created APIs using Golang and implemented Clean Architecture!! :clap: The next step would be to connect a database to our application.
 
 I hope this could be beneficial to you. Thank you for taking the time to read this article. :pray:
 
 -- ssentinull
+
+## References.
+
+1. [Software Architecture Guide](https://martinfowler.com/architecture/)
+2. [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+3. [Go Clean Arch Repo](https://github.com/bxcodec/go-clean-arch)
+
+
