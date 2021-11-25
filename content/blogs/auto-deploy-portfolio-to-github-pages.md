@@ -90,7 +90,7 @@ We've successfully deployed our portfolio to Github Pages!! :tada: :confetti_bal
 
 This is where the benefit of using SSH comes in. Notice how when we push our repos to origin we didn't have to input our email and access token. This is possible because we've set up the SSH agent in our machine and registered the corresponding key to our Github account, so now our machine is on their trusted list. To automate the process, we can simply create a Makefile and a shell script that runs all of the commands necessary to deploy our portfolio without having to input a single credential.
 
-{{< code language="makefile" title="Makefile" id="2" isCollapsed="true" >}}
+{{< code language="makefile" title="Makefile" id="2" >}}
 
     # run hugo server locally
     run:
@@ -102,7 +102,7 @@ This is where the benefit of using SSH comes in. Notice how when we push our rep
 
 {{< /code >}}
 
-{{< code language="shell" title="deploy.sh" id="1" isCollapsed="true" >}}
+{{< code language="shell" title="deploy.sh" id="1" >}}
 
     #! /bin/sh
     echo -e "\e[1;33m start deploying \e[0m"

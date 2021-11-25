@@ -38,7 +38,7 @@ Codebase layout might be insignificant at first glance, but trust me when I say 
 
 To run a sample web server, create a `main.go` inside a `/cmd/server` directory. This dir is used to house our project's main application and nothing else. Our main application should only comprise mostly imports from our modules.
 
-{{< code language="go" title="main.go" id="1" isCollapsed="true" >}}
+{{< code language="go" title="main.go" id="1" >}}
 
 package main
 
@@ -77,7 +77,7 @@ func main() {
 
 To catch any errors our project might have, we need a way to effectively log our server. Thankfully, Logrus's got our back. All we need to do is set our logging parameters in our `main.go` and the configurations will be used every time we log anything in our console.
 
-{{< code language="go" title="main.go" id="3" isCollapsed="true" >}}
+{{< code language="go" title="main.go" id="3" >}}
 
 package main
 
@@ -141,14 +141,14 @@ Currently, the server is running on port `8080` and it's hard-coded into the ser
 
 What we need to do is create a `.env.example` in the root dir that will be used as a template for env variables in case someone else clones our repo. Also, create a `.gitignore` to ignore `.env` files from being committed to our repo.
 
-{{< code language="env" title=".env.example" id="4" isCollapsed="true" >}}
+{{< code language="env" title=".env.example" id="4" >}}
 
 ENV=
 SERVER_PORT=
 
 {{< /code >}}
 
-{{< code language="gitignore" title=".gitignore" id="5" isCollapsed="true" >}}
+{{< code language="gitignore" title=".gitignore" id="5" >}}
 
 .env
 
@@ -156,7 +156,7 @@ SERVER_PORT=
 
 Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080` for `ENV` and `SERVER_PORT` respectively. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to store "configuration file templates or default configs". So we'll use this dir to place our getter functions in a file called `env.go` and call the functions in `main.go`.
 
-{{< code language="go" title="env.go" id="6" isCollapsed="true" >}}
+{{< code language="go" title="env.go" id="6" >}}
 
 package config
 
@@ -207,7 +207,7 @@ func ServerPort() string {
 
 {{< /code >}}
 
-{{< code language="go" title="main.go" id="7" isCollapsed="true" >}}
+{{< code language="go" title="main.go" id="7" >}}
 
 package main
 
@@ -276,7 +276,7 @@ func main() {
 
 To make our life easier, we need to set up a daemon that listens to changes made in the workspace so that the server can automatically restart itself on saved changes. We do this by installing [Modd](https://github.com/cortesi/modd) and setting it to listen to files with `.go` extensions. Create a `.modd` dir and within it a `server.modd.conf` file. Also, create a `Makefile` in the root dir to abbreviate our CLI command.
 
-{{< code language="conf" title="server.modd.conf" id="8" isCollapsed="true" >}}
+{{< code language="conf" title="server.modd.conf" id="8" >}}
 
 **/\*.go !**/\*\_test.go {
 daemon +sigterm: go run cmd/server/main.go
@@ -284,7 +284,7 @@ daemon +sigterm: go run cmd/server/main.go
 
 {{< /code >}}
 
-{{< code language="makefile" title="Makefile" id="9" isCollapsed="true" >}}
+{{< code language="makefile" title="Makefile" id="9" >}}
 
 # command to run the server in daemon mode
 

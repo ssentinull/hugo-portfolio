@@ -41,7 +41,7 @@ As seen in the diagram above, the architecture comprises of four layers:
 
 In our project, we'll refer to 'entities' as 'models'. Since we're making a library app, we'll be dealing with books, so a book is our entity. For the book entity, let's just use the most basic property that a book has, plus a couple of necessary attributes for our database; ID, Title, Author, Description, Published At, Created At, Updated At, Deleted At. Referring back to the [Golang Standard Layout](https://github.com/golang-standards/project-layout), all modules that are meant to be exported must be placed in the `/pkg` dir. So, we create a `/pkg/model`, a place where all future entities will reside, and place `book.go` there.
 
-{{< code language="go" title="book.go" id="1" isCollapsed="true" >}}
+{{< code language="go" title="book.go" id="1" >}}
 
 package model
 
@@ -68,7 +68,7 @@ Indeed, repository is not stated in Uncle Bob's diagram, but we need this as a l
 
 Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
 
-{{< code language="go" title="book.go" id="2" isCollapsed="true" >}}
+{{< code language="go" title="book.go" id="2" >}}
 
 package model
 
@@ -105,7 +105,7 @@ Differing from the intention of `/pkg/model` directory, we'll create a `/pkg/boo
 
 Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We create a `/postgres` dir as a means of separation. If in the future we would like to use another database for the 'book' domain, let's say MongoDB, then we'll create a `/mongodb` inside the `/repository` dir. Create `book_repository_postgres.go` inside this dir.
 
-{{< code language="go" title="book_repository_postgres.go" id="3" isCollapsed="true" >}}
+{{< code language="go" title="book_repository_postgres.go" id="3" >}}
 
 package postgres
 
@@ -126,7 +126,7 @@ func NewBookRepository() model.BookRepository {
 
 }
 
-func (br *bookRepo) ReadBookByID(ctx context.Context, ID int64) (model.Book, error) {
+func (br \*bookRepo) ReadBookByID(ctx context.Context, ID int64) (model.Book, error) {
 
     book := model.Book{
 
@@ -142,7 +142,7 @@ func (br *bookRepo) ReadBookByID(ctx context.Context, ID int64) (model.Book, err
 
 }
 
-func (br *bookRepo) ReadBooks(ctx context.Context) ([]model.Book, error) {
+func (br \*bookRepo) ReadBooks(ctx context.Context) ([]model.Book, error) {
 
     books := []model.Book{
 
@@ -176,7 +176,7 @@ Since we haven't established a database connection, we'll use dummy data in our 
 
 The use case layer should only involve data flow logic and calls to the repository layer. Just like the repository layer, we have to define a book use case interface in the book model.
 
-{{< code language="go" title="book.go" id="4" isCollapsed="true" >}}
+{{< code language="go" title="book.go" id="4" >}}
 
 package model
 
@@ -218,7 +218,7 @@ type BookRepository interface {
 
 Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This example might be barren because we only implement simple retrieval functions. In production-level applications, this layer could include much more complicated logic that involves repositories from multiple domains.
 
-{{< code language="go" title="book_usecase.go" id="5" isCollapsed="true" >}}
+{{< code language="go" title="book_usecase.go" id="5" >}}
 
 package usecase
 
@@ -244,7 +244,7 @@ func NewBookUsecase(br model.BookRepository) model.BookUsecase {
 
 }
 
-func (bu *bookUsecase) GetBookByID(ctx context.Context, ID int64) (model.Book, error) {
+func (bu \*bookUsecase) GetBookByID(ctx context.Context, ID int64) (model.Book, error) {
 
     book, err := bu.bookRepo.ReadBookByID(ctx, ID)
     if err != nil {
@@ -265,7 +265,7 @@ func (bu *bookUsecase) GetBookByID(ctx context.Context, ID int64) (model.Book, e
 
 }
 
-func (bu *bookUsecase) GetBooks(ctx context.Context) ([]model.Book, error) {
+func (bu \*bookUsecase) GetBooks(ctx context.Context) ([]model.Book, error) {
 
     books, err := bu.bookRepo.ReadBooks(ctx)
     if err != nil {
@@ -289,7 +289,7 @@ func (bu *bookUsecase) GetBooks(ctx context.Context) ([]model.Book, error) {
 
 The presenters' role is to format data to and from our application. Since we're creating REST APIs, we'll format our data to JSON. The data to be formatted is retrieved from the previous layer, the use case layer. In a similar fashion to our repository layer, we'll create a `/pkg/book/handler/http` dir as a means of separation, if in the future we'd want to use a different method of presenting data, such as through CLI or RPC.
 
-{{< code language="go" title="book_handler_http.go" id="6" isCollapsed="true" >}}
+{{< code language="go" title="book_handler_http.go" id="6" >}}
 
 package http
 
@@ -310,7 +310,7 @@ type BookHTTPHandler struct {
 
 }
 
-func NewBookHTTPHandler(e *echo.Echo, bu model.BookUsecase) {
+func NewBookHTTPHandler(e \*echo.Echo, bu model.BookUsecase) {
 
     handler := BookHTTPHandler{BookUsecase: bu}
 
@@ -320,7 +320,7 @@ func NewBookHTTPHandler(e *echo.Echo, bu model.BookUsecase) {
 
 }
 
-func (bh *BookHTTPHandler) FetchBooks(c echo.Context) error {
+func (bh \*BookHTTPHandler) FetchBooks(c echo.Context) error {
 
     books, err := bh.BookUsecase.GetBooks(c.Request().Context())
     if err != nil {
@@ -333,7 +333,7 @@ func (bh *BookHTTPHandler) FetchBooks(c echo.Context) error {
 
 }
 
-func (bh *BookHTTPHandler) FetchBookByID(c echo.Context) error {
+func (bh \*BookHTTPHandler) FetchBookByID(c echo.Context) error {
 
     ID, err := strconv.ParseInt(c.Param("ID"), 10, 64)
     if err != nil {
@@ -357,7 +357,7 @@ func (bh *BookHTTPHandler) FetchBookByID(c echo.Context) error {
 
 We use a `/v1` endpoint prefix as a safety net where our API consumers can quickly roll back if ever our new version has a critical bug. The final step would be to import our modules to the main app.
 
-{{< code language="go" title="main.go" id="7" isCollapsed="true" >}}
+{{< code language="go" title="main.go" id="7" >}}
 
 package main
 
@@ -447,5 +447,3 @@ I hope this could be beneficial to you. Thank you for taking the time to read th
 1. [Software Architecture Guide](https://martinfowler.com/architecture/)
 2. [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 3. [Go Clean Arch Repo](https://github.com/bxcodec/go-clean-arch)
-
-
