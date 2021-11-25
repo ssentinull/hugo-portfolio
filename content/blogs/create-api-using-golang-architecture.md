@@ -43,22 +43,20 @@ In our project, we'll refer to 'entities' as 'models'. Since we're making a libr
 
 {{< code language="go" title="book.go" id="1" >}}
 
-package model
+    package model
 
-import "time"
+    import "time"
 
-type Book struct {
-
-    ID          int64     `json:"id"`
-    Title       string    `json:"title"`
-    Author      string    `json:"author"`
-    Description string    `json:"description"`
-    PublishedAt time.Time `json:"published_at"`
-    CreatedAt   time.Time `json:"created_at"`
-    UpdatedAt   time.Time `json:"updated_at"`
-    DeletedAt   time.Time `json:"deleted_at"`
-
-}
+    type Book struct {
+        ID          int64     `json:"id"`
+        Title       string    `json:"title"`
+        Author      string    `json:"author"`
+        Description string    `json:"description"`
+        PublishedAt time.Time `json:"published_at"`
+        CreatedAt   time.Time `json:"created_at"`
+        UpdatedAt   time.Time `json:"updated_at"`
+        DeletedAt   time.Time `json:"deleted_at"`
+    }
 
 {{< /code >}}
 
@@ -70,34 +68,28 @@ Before we create the repository, make sure to define a book repository interface
 
 {{< code language="go" title="book.go" id="2" >}}
 
-package model
+    package model
 
-import (
+    import (
+        "context"
+        "time"
+    )
 
-    "context"
-    "time"
+    type Book struct {
+        ID          int64     `json:"id"`
+        Title       string    `json:"title"`
+        Author      string    `json:"author"`
+        Description string    `json:"description"`
+        PublishedAt time.Time `json:"published_at"`
+        CreatedAt   time.Time `json:"created_at"`
+        UpdatedAt   time.Time `json:"updated_at"`
+        DeletedAt   time.Time `json:"deleted_at"`
+    }
 
-)
-
-type Book struct {
-
-    ID          int64     `json:"id"`
-    Title       string    `json:"title"`
-    Author      string    `json:"author"`
-    Description string    `json:"description"`
-    PublishedAt time.Time `json:"published_at"`
-    CreatedAt   time.Time `json:"created_at"`
-    UpdatedAt   time.Time `json:"updated_at"`
-    DeletedAt   time.Time `json:"deleted_at"`
-
-}
-
-type BookRepository interface {
-
-    ReadBookByID(context.Context, int64) (Book, error)
-    ReadBooks(context.Context) ([]Book, error)
-
-}
+    type BookRepository interface {
+        ReadBookByID(context.Context, int64) (Book, error)
+        ReadBooks(context.Context) ([]Book, error)
+    }
 
 {{< /code >}}
 
@@ -107,66 +99,56 @@ Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We cre
 
 {{< code language="go" title="book_repository_postgres.go" id="3" >}}
 
-package postgres
+    package postgres
 
-import (
+    import (
+        "context"
+        "time"
 
-    "context"
-    "time"
+        "github.com/ssentinull/create-apis-using-golang/pkg/model"
+    )
 
-    "github.com/ssentinull/create-apis-using-golang/pkg/model"
+    type bookRepo struct{}
 
-)
-
-type bookRepo struct{}
-
-func NewBookRepository() model.BookRepository {
-
-    return &bookRepo{}
-
-}
-
-func (br \*bookRepo) ReadBookByID(ctx context.Context, ID int64) (model.Book, error) {
-
-    book := model.Book{
-
-    	ID:          ID,
-    	Title:       "Harry Potter",
-    	Author:      "J. K. Rowling",
-    	Description: "A book about wizards",
-    	PublishedAt: time.Now(),
-    	CreatedAt:   time.Now(),
+    func NewBookRepository() model.BookRepository {
+        return &bookRepo{}
     }
 
-    return book, nil
+    func (br *bookRepo) ReadBookByID(ctx context.Context, ID int64) (model.Book, error) {
+        book := model.Book{
+            ID:          ID,
+            Title:       "Harry Potter",
+            Author:      "J. K. Rowling",
+            Description: "A book about wizards",
+            PublishedAt: time.Now(),
+            CreatedAt:   time.Now(),
+        }
 
-}
-
-func (br \*bookRepo) ReadBooks(ctx context.Context) ([]model.Book, error) {
-
-    books := []model.Book{
-
-    	{
-    		ID:          1,
-    		Title:       "Harry Potter",
-    		Author:      "J. K. Rowling",
-    		Description: "A book about wizards",
-    		PublishedAt: time.Now(),
-    		CreatedAt:   time.Now(),
-    	},
-    	{
-    		ID:          2,
-    		Title:       "The Hobbit",
-    		Author:      "J. R. R. Tolkien",
-    		Description: "A book about hobbits",
-    		PublishedAt: time.Now(),
-    		CreatedAt:   time.Now(),
-    	},
+        return book, nil
     }
 
-    return books, nil
+    func (br *bookRepo) ReadBooks(ctx context.Context) ([]model.Book, error) {
+        books := []model.Book{
+            {
+                ID:          1,
+                Title:       "Harry Potter",
+                Author:      "J. K. Rowling",
+                Description: "A book about wizards",
+                PublishedAt: time.Now(),
+                CreatedAt:   time.Now(),
+            },
+            {
+                ID:          2,
+                Title:       "The Hobbit",
+                Author:      "J. R. R. Tolkien",
+                Description: "A book about hobbits",
+                PublishedAt: time.Now(),
+                CreatedAt:   time.Now(),
+            },
+        }
 
-}
+        return books, nil
+    }
 
 {{< /code >}}
 
@@ -178,41 +160,33 @@ The use case layer should only involve data flow logic and calls to the reposito
 
 {{< code language="go" title="book.go" id="4" >}}
 
-package model
+    package model
 
-import (
+    import (
+        "context"
+        "time"
+    )
 
-    "context"
-    "time"
+    type Book struct {
+        ID          int64     `json:"id"`
+        Title       string    `json:"title"`
+        Author      string    `json:"author"`
+        Description string    `json:"description"`
+        PublishedAt time.Time `json:"published_at"`
+        CreatedAt   time.Time `json:"created_at"`
+        UpdatedAt   time.Time `json:"updated_at"`
+        DeletedAt   time.Time `json:"deleted_at"`
+    }
 
-)
+    type BookUsecase interface {
+        GetBookByID(context.Context, int64) (Book, error)
+        GetBooks(context.Context) ([]Book, error)
+    }
 
-type Book struct {
-
-    ID          int64     `json:"id"`
-    Title       string    `json:"title"`
-    Author      string    `json:"author"`
-    Description string    `json:"description"`
-    PublishedAt time.Time `json:"published_at"`
-    CreatedAt   time.Time `json:"created_at"`
-    UpdatedAt   time.Time `json:"updated_at"`
-    DeletedAt   time.Time `json:"deleted_at"`
-
-}
-
-type BookUsecase interface {
-
-    GetBookByID(context.Context, int64) (Book, error)
-    GetBooks(context.Context) ([]Book, error)
-
-}
-
-type BookRepository interface {
-
-    ReadBookByID(context.Context, int64) (Book, error)
-    ReadBooks(context.Context) ([]Book, error)
-
-}
+    type BookRepository interface {
+        ReadBookByID(context.Context, int64) (Book, error)
+        ReadBooks(context.Context) ([]Book, error)
+    }
 
 {{< /code >}}
 
@@ -220,68 +194,58 @@ Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This examp
 
 {{< code language="go" title="book_usecase.go" id="5" >}}
 
-package usecase
+    package usecase
 
-import (
+    import (
+        "context"
+        "encoding/json"
 
-    "context"
-    "encoding/json"
+        "github.com/sirupsen/logrus"
+        "github.com/ssentinull/create-apis-using-golang/pkg/model"
+    )
 
-    "github.com/sirupsen/logrus"
-    "github.com/ssentinull/create-apis-using-golang/pkg/model"
-
-)
-
-type bookUsecase struct {
-
-    bookRepo model.BookRepository
-
-}
-
-func NewBookUsecase(br model.BookRepository) model.BookUsecase {
-
-    return &bookUsecase{bookRepo: br}
-
-}
-
-func (bu \*bookUsecase) GetBookByID(ctx context.Context, ID int64) (model.Book, error) {
-
-    book, err := bu.bookRepo.ReadBookByID(ctx, ID)
-    if err != nil {
-    	c, err := json.Marshal(ctx)
-    	if err != nil {
-    		logrus.Error(err)
-    	}
-
-    	logrus.WithFields(logrus.Fields{
-    		"ctx": c,
-    		"ID":  ID,
-    	}).Error(err)
-
-    	return model.Book{}, err
+    type bookUsecase struct {
+        bookRepo model.BookRepository
     }
 
-    return book, nil
-
-}
-
-func (bu \*bookUsecase) GetBooks(ctx context.Context) ([]model.Book, error) {
-
-    books, err := bu.bookRepo.ReadBooks(ctx)
-    if err != nil {
-    	c, err := json.Marshal(ctx)
-    	if err != nil {
-    		logrus.Error(err)
-    	}
-
-    	logrus.WithField("ctx", c).Error(err)
-
-    	return nil, err
+    func NewBookUsecase(br model.BookRepository) model.BookUsecase {
+        return &bookUsecase{bookRepo: br}
     }
 
-    return books, nil
+    func (bu *bookUsecase) GetBookByID(ctx context.Context, ID int64) (model.Book, error) {
+        book, err := bu.bookRepo.ReadBookByID(ctx, ID)
+        if err != nil {
+            c, err := json.Marshal(ctx)
+            if err != nil {
+                logrus.Error(err)
+            }
 
-}
+            logrus.WithFields(logrus.Fields{
+                "ctx": c,
+                "ID":  ID,
+            }).Error(err)
+
+            return model.Book{}, err
+        }
+
+        return book, nil
+    }
+
+    func (bu *bookUsecase) GetBooks(ctx context.Context) ([]model.Book, error) {
+        books, err := bu.bookRepo.ReadBooks(ctx)
+        if err != nil {
+            c, err := json.Marshal(ctx)
+            if err != nil {
+                logrus.Error(err)
+            }
+
+            logrus.WithField("ctx", c).Error(err)
+
+            return nil, err
+        }
+
+        return books, nil
+    }
 
 {{< /code >}}
 
@@ -291,67 +255,57 @@ The presenters' role is to format data to and from our application. Since we're 
 
 {{< code language="go" title="book_handler_http.go" id="6" >}}
 
-package http
+    package http
 
-import (
+    import (
+        "net/http"
+        "strconv"
 
-    "net/http"
-    "strconv"
+        "github.com/labstack/echo/v4"
+        "github.com/sirupsen/logrus"
+        "github.com/ssentinull/create-apis-using-golang/pkg/model"
+    )
 
-    "github.com/labstack/echo/v4"
-    "github.com/sirupsen/logrus"
-    "github.com/ssentinull/create-apis-using-golang/pkg/model"
-
-)
-
-type BookHTTPHandler struct {
-
-    BookUsecase model.BookUsecase
-
-}
-
-func NewBookHTTPHandler(e \*echo.Echo, bu model.BookUsecase) {
-
-    handler := BookHTTPHandler{BookUsecase: bu}
-
-    g := e.Group("/v1")
-    g.GET("/books", handler.FetchBooks)
-    g.GET("/books/:ID", handler.FetchBookByID)
-
-}
-
-func (bh \*BookHTTPHandler) FetchBooks(c echo.Context) error {
-
-    books, err := bh.BookUsecase.GetBooks(c.Request().Context())
-    if err != nil {
-    	logrus.Error(err)
-
-    	return c.JSON(http.StatusInternalServerError, err.Error())
+    type BookHTTPHandler struct {
+        BookUsecase model.BookUsecase
     }
 
-    return c.JSON(http.StatusOK, books)
+    func NewBookHTTPHandler(e *echo.Echo, bu model.BookUsecase) {
+        handler := BookHTTPHandler{BookUsecase: bu}
 
-}
-
-func (bh \*BookHTTPHandler) FetchBookByID(c echo.Context) error {
-
-    ID, err := strconv.ParseInt(c.Param("ID"), 10, 64)
-    if err != nil {
-    	logrus.Error(err)
-
-    	return c.JSON(http.StatusBadRequest, "url param is faulty")
+        g := e.Group("/v1")
+        g.GET("/books", handler.FetchBooks)
+        g.GET("/books/:ID", handler.FetchBookByID)
     }
 
-    book, err := bh.BookUsecase.GetBookByID(c.Request().Context(), ID)
-    if err != nil {
-    	logrus.Error(err)
+    func (bh *BookHTTPHandler) FetchBooks(c echo.Context) error {
+        books, err := bh.BookUsecase.GetBooks(c.Request().Context())
+        if err != nil {
+            logrus.Error(err)
 
-    	return c.JSON(http.StatusInternalServerError, err.Error())
+            return c.JSON(http.StatusInternalServerError, err.Error())
+        }
+
+        return c.JSON(http.StatusOK, books)
     }
 
-    return c.JSON(http.StatusOK, book)
+    func (bh *BookHTTPHandler) FetchBookByID(c echo.Context) error {
+        ID, err := strconv.ParseInt(c.Param("ID"), 10, 64)
+        if err != nil {
+            logrus.Error(err)
 
-}
+            return c.JSON(http.StatusBadRequest, "url param is faulty")
+        }
+
+        book, err := bh.BookUsecase.GetBookByID(c.Request().Context(), ID)
+        if err != nil {
+            logrus.Error(err)
+
+            return c.JSON(http.StatusInternalServerError, err.Error())
+        }
+
+        return c.JSON(http.StatusOK, book)
+    }
 
 {{< /code >}}
 
@@ -359,70 +313,62 @@ We use a `/v1` endpoint prefix as a safety net where our API consumers can quick
 
 {{< code language="go" title="main.go" id="7" >}}
 
-package main
+    package main
 
-import (
+    import (
+        "net/http"
+        "os"
+        "time"
 
-    "net/http"
-    "os"
-    "time"
+        "github.com/labstack/echo/v4"
+        "github.com/sirupsen/logrus"
+        "github.com/ssentinull/create-apis-using-golang/config"
+        _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/pkg/book/handler/http"
+        _bookRepo "github.com/ssentinull/create-apis-using-golang/pkg/book/repository/postgres"
+        _bookUcase "github.com/ssentinull/create-apis-using-golang/pkg/book/usecase"
+    )
 
-    "github.com/labstack/echo/v4"
-    "github.com/sirupsen/logrus"
-    "github.com/ssentinull/create-apis-using-golang/config"
-    _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/pkg/book/handler/http"
-    _bookRepo "github.com/ssentinull/create-apis-using-golang/pkg/book/repository/postgres"
-    _bookUcase "github.com/ssentinull/create-apis-using-golang/pkg/book/usecase"
+    // initialize logger configurations
+    func initLogger() {
+        logLevel := logrus.ErrorLevel
+        switch config.Env() {
+        case "dev", "development":
+            logLevel = logrus.InfoLevel
+        }
 
-)
+        logrus.SetFormatter(&logrus.TextFormatter{
+            ForceColors:     true,
+            DisableSorting:  true,
+            DisableColors:   false,
+            FullTimestamp:   true,
+            TimestampFormat: "15:04:05 02-01-2006",
+        })
 
-// initialize logger configurations
-func initLogger() {
-
-    logLevel := logrus.ErrorLevel
-    switch config.Env() {
-    case "dev", "development":
-    	logLevel = logrus.InfoLevel
+        logrus.SetOutput(os.Stdout)
+        logrus.SetReportCaller(true)
+        logrus.SetLevel(logLevel)
     }
 
-    logrus.SetFormatter(&logrus.TextFormatter{
-    	ForceColors:     true,
-    	DisableSorting:  true,
-    	DisableColors:   false,
-    	FullTimestamp:   true,
-    	TimestampFormat: "15:04:05 02-01-2006",
-    })
-
-    logrus.SetOutput(os.Stdout)
-    logrus.SetReportCaller(true)
-    logrus.SetLevel(logLevel)
-
-}
-
-// run initLogger() before running main()
-func init() {
-
-    initLogger()
-
-}
-
-func main() {
-
-    e := echo.New()
-
-    bookRepo := _bookRepo.NewBookRepository()
-    bookUsecase := _bookUcase.NewBookUsecase(bookRepo)
-    _bookHTTPHndlr.NewBookHTTPHandler(e, bookUsecase)
-
-    s := &http.Server{
-    	Addr:         ":" + config.ServerPort(),
-    	ReadTimeout:  2 * time.Minute,
-    	WriteTimeout: 2 * time.Minute,
+    // run initLogger() before running main()
+    func init() {
+        initLogger()
     }
 
-    logrus.Fatal(e.StartServer(s))
+    func main() {
+        e := echo.New()
 
-}
+        bookRepo := _bookRepo.NewBookRepository()
+        bookUsecase := _bookUcase.NewBookUsecase(bookRepo)
+        _bookHTTPHndlr.NewBookHTTPHandler(e, bookUsecase)
+
+        s := &http.Server{
+            Addr:         ":" + config.ServerPort(),
+            ReadTimeout:  2 * time.Minute,
+            WriteTimeout: 2 * time.Minute,
+        }
+
+        logrus.Fatal(e.StartServer(s))
+    }
 
 {{< /code >}}
 

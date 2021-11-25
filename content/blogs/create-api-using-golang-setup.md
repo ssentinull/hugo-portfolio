@@ -40,34 +40,30 @@ To run a sample web server, create a `main.go` inside a `/cmd/server` directory.
 
 {{< code language="go" title="main.go" id="1" >}}
 
-package main
+    package main
 
-import (
+    import (
+        "log"
+        "net/http"
+        "time"
 
-    "log"
-    "net/http"
-    "time"
+        "github.com/labstack/echo/v4"
+    )
 
-    "github.com/labstack/echo/v4"
+    func main() {
+        e := echo.New()
+        e.GET("/", func(c echo.Context) error {
+            return c.String(http.StatusOK, "Hello, World!")
+        })
 
-)
+        s := &http.Server{
+            Addr:         ":8080",
+            ReadTimeout:  2 * time.Minute,
+            WriteTimeout: 2 * time.Minute,
+        }
 
-func main() {
-
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    	return c.String(http.StatusOK, "Hello, World!")
-    })
-
-    s := &http.Server{
-    	Addr:         ":8080",
-    	ReadTimeout:  2 * time.Minute,
-    	WriteTimeout: 2 * time.Minute,
+        log.Fatal(e.StartServer(s))
     }
-
-    log.Fatal(e.StartServer(s))
-
-}
 
 {{< /code >}}
 
@@ -79,59 +75,51 @@ To catch any errors our project might have, we need a way to effectively log our
 
 {{< code language="go" title="main.go" id="3" >}}
 
-package main
+    package main
 
-import (
+    import (
+        "net/http"
+        "os"
+        "time"
 
-    "net/http"
-    "os"
-    "time"
+        "github.com/labstack/echo/v4"
+        "github.com/sirupsen/logrus"
+    )
 
-    "github.com/labstack/echo/v4"
-    "github.com/sirupsen/logrus"
+    // initialize logger configurations
+    func initLogger() {
+        logrus.SetFormatter(&logrus.TextFormatter{
+            ForceColors:     true,
+            DisableSorting:  true,
+            DisableColors:   false,
+            FullTimestamp:   true,
+            TimestampFormat: "15:04:05 02-01-2006",
+        })
 
-)
-
-// initialize logger configurations
-func initLogger() {
-
-    logrus.SetFormatter(&logrus.TextFormatter{
-    	ForceColors:     true,
-    	DisableSorting:  true,
-    	DisableColors:   false,
-    	FullTimestamp:   true,
-    	TimestampFormat: "15:04:05 02-01-2006",
-    })
-
-    logrus.SetOutput(os.Stdout)
-    logrus.SetReportCaller(true)
-    logrus.SetLevel(logrus.ErrorLevel)
-
-}
-
-// run initLogger() before running main()
-func init() {
-
-    initLogger()
-
-}
-
-func main() {
-
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
-    })
-
-    s := &http.Server{
-    	Addr:         ":8080",
-    	ReadTimeout:  2 * time.Minute,
-    	WriteTimeout: 2 * time.Minute,
+        logrus.SetOutput(os.Stdout)
+        logrus.SetReportCaller(true)
+        logrus.SetLevel(logrus.ErrorLevel)
     }
 
-    logrus.Fatal(e.StartServer(s))
+    // run initLogger() before running main()
+    func init() {
+        initLogger()
+    }
 
-}
+    func main() {
+        e := echo.New()
+        e.GET("/", func(c echo.Context) error {
+        return c.String(http.StatusOK, "Hello, World!")
+        })
+
+        s := &http.Server{
+            Addr:         ":8080",
+            ReadTimeout:  2 * time.Minute,
+            WriteTimeout: 2 * time.Minute,
+        }
+
+        logrus.Fatal(e.StartServer(s))
+    }
 
 {{< /code >}}
 
@@ -143,14 +131,14 @@ What we need to do is create a `.env.example` in the root dir that will be used 
 
 {{< code language="env" title=".env.example" id="4" >}}
 
-ENV=
-SERVER_PORT=
+    ENV=
+    SERVER_PORT=
 
 {{< /code >}}
 
 {{< code language="gitignore" title=".gitignore" id="5" >}}
 
-.env
+    .env
 
 {{< /code >}}
 
@@ -158,117 +146,101 @@ Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080
 
 {{< code language="go" title="env.go" id="6" >}}
 
-package config
+    package config
 
-import (
+    import (
+        "fmt"
+        "os"
 
-    "fmt"
-    "os"
+        "github.com/joho/godotenv"
+        "github.com/sirupsen/logrus"
+    )
 
-    "github.com/joho/godotenv"
-    "github.com/sirupsen/logrus"
+    func init() {
+        env := os.Getenv("ENV")
+        if env != "dev" && env != "" {
+            logrus.Warn("running using OS env variables")
 
-)
+            return
+        }
 
-func init() {
+        if err := godotenv.Load(); err != nil {
+            logrus.Warn(".env file not found")
 
-    env := os.Getenv("ENV")
-    if env != "dev" && env != "" {
-    	logrus.Warn("running using OS env variables")
+            return
+        }
 
-    	return
+        logrus.Warn("running using .env file")
+
+        return
     }
 
-    if err := godotenv.Load(); err != nil {
-    	logrus.Warn(".env file not found")
-
-    	return
+    // Env returns Env in .env
+    func Env() string {
+        return fmt.Sprintf("%s", os.Getenv("ENV"))
     }
 
-    logrus.Warn("running using .env file")
-
-    return
-
-}
-
-// Env returns Env in .env
-func Env() string {
-
-    return fmt.Sprintf("%s", os.Getenv("ENV"))
-
-}
-
-// ServerPort returns the server port in .env
-func ServerPort() string {
-
-    return fmt.Sprintf("%s", os.Getenv("SERVER_PORT"))
-
-}
+    // ServerPort returns the server port in .env
+    func ServerPort() string {
+        return fmt.Sprintf("%s", os.Getenv("SERVER_PORT"))
+    }
 
 {{< /code >}}
 
 {{< code language="go" title="main.go" id="7" >}}
 
-package main
+    package main
 
-import (
+    import (
+        "net/http"
+        "os"
+        "time"
 
-    "net/http"
-    "os"
-    "time"
+        "github.com/labstack/echo/v4"
+        "github.com/sirupsen/logrus"
+        "github.com/ssentinull/create-apis-using-golang/config"
+    )
 
-    "github.com/labstack/echo/v4"
-    "github.com/sirupsen/logrus"
-    "github.com/ssentinull/create-apis-using-golang/config"
+    // initialize logger configurations
+    func initLogger() {
+        logLevel := logrus.ErrorLevel
+        switch config.Env() {
+        case "dev", "development":
+            logLevel = logrus.InfoLevel
+        }
 
-)
+        logrus.SetFormatter(&logrus.TextFormatter{
+            ForceColors:     true,
+            DisableSorting:  true,
+            DisableColors:   false,
+            FullTimestamp:   true,
+            TimestampFormat: "15:04:05 02-01-2006",
+        })
 
-// initialize logger configurations
-func initLogger() {
-
-    logLevel := logrus.ErrorLevel
-    switch config.Env() {
-    case "dev", "development":
-    	logLevel = logrus.InfoLevel
+        logrus.SetOutput(os.Stdout)
+        logrus.SetReportCaller(true)
+        logrus.SetLevel(logLevel)
     }
 
-    logrus.SetFormatter(&logrus.TextFormatter{
-    	ForceColors:     true,
-    	DisableSorting:  true,
-    	DisableColors:   false,
-    	FullTimestamp:   true,
-    	TimestampFormat: "15:04:05 02-01-2006",
-    })
-
-    logrus.SetOutput(os.Stdout)
-    logrus.SetReportCaller(true)
-    logrus.SetLevel(logLevel)
-
-}
-
-// run initLogger() before running main()
-func init() {
-
-    initLogger()
-
-}
-
-func main() {
-
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    	return c.String(http.StatusOK, "Hello, World!")
-    })
-
-    s := &http.Server{
-    	Addr:         ":" + config.ServerPort(),
-    	ReadTimeout:  2 * time.Minute,
-    	WriteTimeout: 2 * time.Minute,
+    // run initLogger() before running main()
+    func init() {
+        initLogger()
     }
 
-    logrus.Fatal(e.StartServer(s))
+    func main() {
+        e := echo.New()
+        e.GET("/", func(c echo.Context) error {
+            return c.String(http.StatusOK, "Hello, World!")
+        })
 
-}
+        s := &http.Server{
+            Addr:         ":" + config.ServerPort(),
+            ReadTimeout:  2 * time.Minute,
+            WriteTimeout: 2 * time.Minute,
+        }
+
+        logrus.Fatal(e.StartServer(s))
+    }
 
 {{< /code >}}
 
@@ -278,18 +250,17 @@ To make our life easier, we need to set up a daemon that listens to changes made
 
 {{< code language="conf" title="server.modd.conf" id="8" >}}
 
-**/\*.go !**/\*\_test.go {
-daemon +sigterm: go run cmd/server/main.go
-}
+    **/\*.go !**/\*\_test.go {
+        daemon +sigterm: go run cmd/server/main.go
+    }
 
 {{< /code >}}
 
 {{< code language="makefile" title="Makefile" id="9" >}}
 
-# command to run the server in daemon mode
-
-run-server:
-@modd -f ./.modd/server.modd.conf
+    # command to run the server in daemon mode
+    run-server:
+        @modd -f ./.modd/server.modd.conf
 
 {{< /code >}}
 

@@ -10,7 +10,7 @@ description: "Effortlessly deploy static content to Github Pages."
 
 In the [previous article](/blogs/create-a-portfolio-using-hugo), we've covered how to create a beautiful portfolio using Hugo in less than an hour. But what good is it to have an awesome portfolio if no one can see it? So in this article, I'll be showing you how to set up an automatic deployment flow that will deploy to Github Pages using shell scripts.
 
-> :mega: **Shout-out** :mega:
+> :mega: **Shout-out!** :mega:
 >
 > Shout-out to [fahmifan](https://github.com/fahmifan) for sharing his knowledge and allowing me to write about it in my blog. Please show some love for his [portfolio repo](https://github.com/fahmifan/hugo-blog).
 
