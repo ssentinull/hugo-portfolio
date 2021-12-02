@@ -4,6 +4,7 @@ date: "2021-11-16"
 author: "ssentinull"
 cover: "img/blogs/create-api-using-golang-setup/0.jpg"
 description: "A good workspace will go a long way."
+tags: ["environment", "api", "golang"]
 ---
 
 ## Introduction.

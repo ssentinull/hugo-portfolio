@@ -4,6 +4,7 @@ date: "2021-11-22"
 author: "ssentinull"
 cover: "img/blogs/create-api-using-golang-architecture/0.jpg"
 description: "Architecture applies just as much in software as it does in buildings."
+tags: ["architecture", "api", "golang"]
 ---
 
 ## Introduction.

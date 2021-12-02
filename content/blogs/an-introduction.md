@@ -4,6 +4,7 @@ date: "2021-11-23"
 author: "ssentinull"
 cover: "img/introduction.jpg"
 description: "For those wondering what this site is all about."
+tags: ["personal-update"]
 ---
 
 ## Hello. :wave:

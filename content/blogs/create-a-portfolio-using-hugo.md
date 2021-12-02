@@ -4,6 +4,7 @@ date: "2021-11-08"
 author: "ssentinull"
 cover: "img/blogs/create-a-portfolio-using-hugo/0.jpg"
 description: "Create a beatiful portfolio in less than an hour using Hugo."
+tags: ["portfolio", "hugo", "markdown", "git"]
 ---
 
 ## Introduction.

@@ -4,6 +4,7 @@ date: "2021-11-09"
 author: "ssentinull"
 cover: "img/blogs/auto-deploy-portfolio-to-github-pages/0.jpg"
 description: "Effortlessly deploy static content to Github Pages."
+tags: ["deployment", "portfolio", "hugo", "github", "git", "shell"]
 ---
 
 ## Introduction.
