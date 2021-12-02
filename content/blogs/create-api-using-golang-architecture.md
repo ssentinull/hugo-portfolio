@@ -60,9 +60,9 @@ In our project, we'll refer to 'entities' as 'models'. Since we're making a libr
 
 {{< /code >}}
 
-## Implementing Repositories.
+## Implementing External Interfaces.
 
-Indeed, repository is not stated in Uncle Bob's diagram, but we need this as a layer that connects to our database. If we're to draw this layer on the diagram, it would be between entities and use case layer, hence making it accessible to use cases and adapters while making it only dependent on entities.
+The external interface that we use in our app is in the form of a database connection. We'll cover more in-depth regarding database setup in part three of this series, but in the meantime, we'll focus on how a database connection is implemented as an individual layer. Since we're dealing with datastore, we'll use the term 'repository' instead of 'external interface'.
 
 Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
 
