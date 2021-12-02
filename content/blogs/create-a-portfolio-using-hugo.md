@@ -1,16 +1,17 @@
 ---
-title: "Create a Porfolio using Hugo."
+title: "Create a Portfolio using Hugo."
 date: "2021-11-08"
 author: "ssentinull"
 cover: "img/blogs/create-a-portfolio-using-hugo/0.jpg"
 description: "Create a beatiful portfolio in less than an hour using Hugo."
+tags: ["portfolio", "hugo", "markdown", "git"]
 ---
 
 ## Introduction.
 
 This article will give you a step-by-step tutorial on how to create a beautiful web-based portfolio using Hugo.
 
-> :mega: **Shout-out** :mega:
+> :mega: **Shout-out!** :mega:
 >
 > Shout-out to [fahmifan](https://github.com/fahmifan) for sharing his knowledge and allowing me to write about it in my blog. Please show some love for his [portfolio repo](https://github.com/fahmifan/fahmifan.github.io).
 
@@ -67,12 +68,12 @@ $ cd themes/hello-friend
 $ git checkout -b portfolio master
 ```
 
-{{< code language=".gitmodules" title=".gitmodules" id="1" isCollapsed="true" >}}
+{{< code language="gitmodules" title=".gitmodules" id="1" isCollapsed="true" >}}
 
-[submodule "themes/hello-friend"]
-path = themes/hello-friend
-url = https://github.com/ssentinull/hugo-theme-hello-friend.git
-branch = custom
+    [submodule "themes/hello-friend"]
+    path = themes/hello-friend
+    url = https://github.com/ssentinull/hugo-theme-hello-friend.git
+    branch = custom
 
 {{< /code >}}
 
@@ -111,11 +112,12 @@ Hugo works is by reading contents of `.md` files inside the `/content` directory
 
 {{< code language="toml" title="config.toml" id="2" isCollapsed="true" >}}
 
-...
-[[languages.en.menu.main]]
-identifier = "about"
-name = "About"
-url = "/about"
+    ...
+
+    [[languages.en.menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about"
 
 {{< /code >}}
 
@@ -175,11 +177,12 @@ We're done with our self-introduction page, now let's move on to our projects pa
 
 {{< code language="toml" title="config.toml" id="4" isCollapsed="true" >}}
 
-...
-[[languages.en.menu.main]]
-identifier = "projects"
-name = "Projects"
-url = "/projects"
+    ...
+
+    [[languages.en.menu.main]]
+    identifier = "projects"
+    name = "Projects"
+    url = "/projects"
 
 {{< /code >}}
 
@@ -246,24 +249,23 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
 
 Finally, because we want our projects page to be our centerpiece, we need to make it so by routing the `/projects` endpoint as our entry point in `config.toml`.
 
-{{< code language="md" title="project-one.md/project-two.md" id="6" isCollapsed="true" >}}
+{{< code language="toml" title="config.toml" id="6" isCollapsed="true" >}}
 
-...
-[params]
+    ...
 
-# dir name of your blog content (default is `content/posts`).
+    [params]
 
-# the list of set content will show up on your index page (baseurl).
+    # dir name of your blog content (default is `content/posts`).
+    # the list of set content will show up on your index page (baseurl).
+    contentTypeName = "projects"
 
-contentTypeName = "projects"
+    ...
 
-...
+    [languages.en.params.logo]
+    logoHomeLink = "/projects"
+    logoText = "hello friend"
 
-[languages.en.params.logo]
-logoHomeLink = "/projects"
-logoText = "hello friend"
-
-...
+    ...
 
 {{< /code >}}
 
