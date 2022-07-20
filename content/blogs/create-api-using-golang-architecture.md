@@ -9,11 +9,11 @@ tags: ["architecture", "api", "golang"]
 
 ## Introduction.
 
-In the [previous](/blogs/create-api-using-golang-setup/) article, we've set up our workspace that will our developing experience more pleasant. Now it's time to develop the app itself. However, there is one thing I want to point out before we proceed, and that is Clean Architecture.
+In the [previous](/blogs/create-api-using-golang-setup/) article, we've set up our workspace that will make our development experience more pleasant. Now it's time to develop the app itself. However, there is one thing I want to discuss before we proceed, and that is Clean Architecture.
 
 ## What is Architecture.
 
-Before jumping to Clean Architecture, let's discuss what an 'architecture' actually is. Different experts have different definitions of what architecture exactly is. Some say it's 'the fundamental organization of a system' while others define it as 'the way the highest level components are wired together. Since I'm nowhere near to being an expert, I'll just have to defer to the definition provided by the experts, which in essence is 'how we organize our system'.
+Before jumping to Clean Architecture, let's discuss what 'architecture' actually is. Different experts have different definitions of what architecture exactly is. Some say it's 'the fundamental organization of a system' while others define it as 'the way the highest level components are wired together. Since I'm nowhere near to being an expert, I'll just have to defer to the definition provided by the experts, which in essence is 'how we organize our system'.
 
 ## Why bother with Architecture.
 
@@ -31,44 +31,19 @@ Clean Architecture is a concept forwarded by Robert C. Martin (Uncle Bob) in 202
 
 This layering technique produces a system that's testable, independent of frameworks, independent of UI, independent of database, and independent of any external agency. The rule of this architecture is very straightforward; source code dependencies can only point inwards. In other words, the inner circle can know nothing about the outer circle, while something declared in the outer circle can not be mentioned in the inner circle.
 
-As seen in the diagram above, the architecture comprises of four layers:
+As seen in the diagram above, the architecture comprises four layers:
 
-1. Entities - business rules in the form of objects with methods, or a set of data structures with functions.
+1. Entities - objects that correlate to the business at hand.
 2. Use Cases - manages the flow of data to and from entities.
-3. Interface Adapters - converts use cases' or entities' data format to external agency's data format.
-4. Frameworks and Drives - consists of external frameworks and tools.
+3. Interface Adapters - converts use cases' data format to a more general data format.
+4. Frameworks and Drives - external frameworks and tools.
 
 ## Implementing Entities.
 
 In our project, we'll refer to 'entities' as 'models'. Since we're making a library app, we'll be dealing with books, so a book is our entity. For the book entity, let's just use the most basic property that a book has, plus a couple of necessary attributes for our database; ID, Title, Author, Description, Published At, Created At, Updated At, Deleted At. Referring back to the [Golang Standard Layout](https://github.com/golang-standards/project-layout), all modules that are meant to be exported must be placed in the `/pkg` dir. So, we create a `/pkg/model`, a place where all future entities will reside, and place `book.go` there.
 
 {{< code language="go" title="book.go" id="1" >}}
-
-    package model
-
-    import "time"
-
-    type Book struct {
-        ID          int64     `json:"id"`
-        Title       string    `json:"title"`
-        Author      string    `json:"author"`
-        Description string    `json:"description"`
-        PublishedAt time.Time `json:"published_at"`
-        CreatedAt   time.Time `json:"created_at"`
-        UpdatedAt   time.Time `json:"updated_at"`
-        DeletedAt   time.Time `json:"deleted_at"`
-    }
-
-{{< /code >}}
-
-## Implementing External Interfaces.
-
-The external interface that we use in our app is in the form of a database connection. We'll cover more in-depth regarding database setup in part three of this series, but in the meantime, we'll focus on how a database connection is implemented as an individual layer. Since we're dealing with datastore, we'll use the term 'repository' instead of 'external interface'.
-
-Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
-
-{{< code language="go" title="book.go" id="2" >}}
-
+  
     package model
 
     import (
@@ -77,19 +52,74 @@ Before we create the repository, make sure to define a book repository interface
     )
 
     type Book struct {
-        ID          int64     `json:"id"`
-        Title       string    `json:"title"`
-        Author      string    `json:"author"`
-        Description string    `json:"description"`
-        PublishedAt time.Time `json:"published_at"`
-        CreatedAt   time.Time `json:"created_at"`
-        UpdatedAt   time.Time `json:"updated_at"`
-        DeletedAt   time.Time `json:"deleted_at"`
+        ID            int64     `json:"id"`
+        Title         string    `json:"title"`
+        Author        string    `json:"author"`
+        Description   string    `json:"description"`
+        PublishedDate string    `json:"published_date"`
+        CreatedAt     time.Time `json:"created_at"`
+        UpdatedAt     time.Time `json:"updated_at"`
+        DeletedAt     time.Time `json:"deleted_at"`
     }
 
+    type CreateBookInput struct {
+        Title         string `json:"title"`
+        Author        string `json:"author"`
+        Description   string `json:"description"`
+        PublishedDate string `json:"published_date"`
+    }
+
+    func (i CreateBookInput) ToModel() *Book {
+        return &Book{
+            ID:            int64(1),
+            Title:         i.Title,
+            Author:        i.Author,
+            Description:   i.Description,
+            PublishedDate: i.PublishedDate,
+            CreatedAt:     time.Now(),
+        }
+    }
+
+    type UpdateBookInput struct {
+        ID            int64  `json:"id"`
+        Title         string `json:"title"`
+        Author        string `json:"author"`
+        Description   string `json:"description"`
+        PublishedDate string `json:"published_date"`
+    }
+
+    func (i UpdateBookInput) ToModel() *Book {
+        return &Book{
+            ID:            i.ID,
+            Title:         i.Title,
+            Author:        i.Author,
+            Description:   i.Description,
+            PublishedDate: i.PublishedDate,
+            UpdatedAt:     time.Now(),
+        }
+    }
+
+{{< /code >}}
+
+## Implementing Use Cases.
+
+The use cases in our app will be divided into two parts; usecase (I know it's redundant but it explains itself as we proceed) and repository. Usecase will only include business logic while repository will only include transactions to our data store. One can not happen within the other, eg: a business logic can not happen in a repository and a usecase can not make calls directly to our data store.
+
+### Implementing Repository.
+We'll start with repository. Since we need a place to store our books, we need a database. Repository comes into play when we want to interact with our database. Fetch, create, update, and delete data from and to our database happens exclusively in our repository. In the meantime, we'll use dummy data since we won't cover database connections in this part of the series.
+
+Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
+
+{{< code language="go" title="book.go" id="2" >}}
+
+    ...
+
     type BookRepository interface {
-        ReadBookByID(context.Context, int64) (Book, error)
-        ReadBooks(context.Context) ([]Book, error)
+        Create(ctx context.Context, input *Book) (err error)
+        DeleteByID(ctx context.Context, ID int64) (err error)
+        FindByID(ctx context.Context, ID int64) (book *Book, err error)
+        FindAll(ctx context.Context) (books []*Book, err error)
+        Update(ctx context.Context, input *Book) (book *Book, err error)
     }
 
 {{< /code >}}
@@ -99,7 +129,7 @@ Differing from the intention of `/pkg/model` directory, we'll create a `/pkg/boo
 Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We create a `/postgres` dir as a means of separation. If in the future we would like to use another database for the 'book' domain, let's say MongoDB, then we'll create a `/mongodb` inside the `/repository` dir. Create `book_repository_postgres.go` inside this dir.
 
 {{< code language="go" title="book_repository_postgres.go" id="3" >}}
-
+    
     package postgres
 
     import (
@@ -115,91 +145,92 @@ Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We cre
         return &bookRepo{}
     }
 
-    func (br *bookRepo) ReadBookByID(ctx context.Context, ID int64) (model.Book, error) {
-        book := model.Book{
-            ID:          ID,
-            Title:       "Harry Potter",
-            Author:      "J. K. Rowling",
-            Description: "A book about wizards",
-            PublishedAt: time.Now(),
-            CreatedAt:   time.Now(),
+    func (br *bookRepo) Create(ctx context.Context, book *model.Book) error {
+        return nil
+    }
+
+    func (br *bookRepo) DeleteByID(ctx context.Context, ID int64) error {
+        return nil
+    }
+
+    func (br *bookRepo) FindByID(ctx context.Context, ID int64) (*model.Book, error) {
+        book := &model.Book{
+            ID:            ID,
+            Title:         "Harry Potter",
+            Author:        "J. K. Rowling",
+            Description:   "A book about wizards",
+            PublishedDate: "10-12-2022",
+            CreatedAt:     time.Now(),
         }
 
         return book, nil
     }
 
-    func (br *bookRepo) ReadBooks(ctx context.Context) ([]model.Book, error) {
-        books := []model.Book{
+    func (br *bookRepo) FindAll(ctx context.Context) ([]*model.Book, error) {
+        books := []*model.Book{
             {
-                ID:          1,
-                Title:       "Harry Potter",
-                Author:      "J. K. Rowling",
-                Description: "A book about wizards",
-                PublishedAt: time.Now(),
-                CreatedAt:   time.Now(),
+                ID:            1,
+                Title:         "Harry Potter",
+                Author:        "J. K. Rowling",
+                Description:   "A book about wizards",
+                PublishedDate: "10-12-2022",
+                CreatedAt:     time.Now(),
             },
             {
-                ID:          2,
-                Title:       "The Hobbit",
-                Author:      "J. R. R. Tolkien",
-                Description: "A book about hobbits",
-                PublishedAt: time.Now(),
-                CreatedAt:   time.Now(),
+                ID:            2,
+                Title:         "The Hobbit",
+                Author:        "J. R. R. Tolkien",
+                Description:   "A book about hobbits",
+                PublishedDate: "11-11-2022",
+                CreatedAt:     time.Now(),
             },
         }
 
         return books, nil
     }
 
+    func (br *bookRepo) Update(ctx context.Context, input *model.Book) (*model.Book, error) {
+        book := &model.Book{
+            ID:            int64(1),
+            Title:         "Harry Potter",
+            Author:        "J. K. Rowling",
+            Description:   "A book about wizards",
+            PublishedDate: "10-12-2022",
+            CreatedAt:     time.Now(),
+        }
+
+        return book, nil
+    }
+
 {{< /code >}}
 
-Since we haven't established a database connection, we'll use dummy data in our repository as an example. Ideally, this layer will only be filled with CRUD queries to our database.
+### Implementing Usecases.
 
-## Implementing Usecases.
-
-The use case layer should only involve data flow logic and calls to the repository layer. Just like the repository layer, we have to define a book use case interface in the book model.
+The usecase layer should only involve business logic and calls to the repository layer. Just like the repository layer, we have to define a book usecase interface in the book model.
 
 {{< code language="go" title="book.go" id="4" >}}
 
-    package model
-
-    import (
-        "context"
-        "time"
-    )
-
-    type Book struct {
-        ID          int64     `json:"id"`
-        Title       string    `json:"title"`
-        Author      string    `json:"author"`
-        Description string    `json:"description"`
-        PublishedAt time.Time `json:"published_at"`
-        CreatedAt   time.Time `json:"created_at"`
-        UpdatedAt   time.Time `json:"updated_at"`
-        DeletedAt   time.Time `json:"deleted_at"`
-    }
-
+    ...
+    
     type BookUsecase interface {
-        GetBookByID(context.Context, int64) (Book, error)
-        GetBooks(context.Context) ([]Book, error)
-    }
-
-    type BookRepository interface {
-        ReadBookByID(context.Context, int64) (Book, error)
-        ReadBooks(context.Context) ([]Book, error)
+        Create(ctx context.Context, input *CreateBookInput) (book *Book, err error)
+        DeleteByID(ctx context.Context, ID int64) (err error)
+        FindByID(ctx context.Context, ID int64) (book *Book, err error)
+        FindAll(ctx context.Context) (books []*Book, err error)
+        Update(ctx context.Context, input *UpdateBookInput) (book *Book, err error)
     }
 
 {{< /code >}}
 
-Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This example might be barren because we only implement simple retrieval functions. In production-level applications, this layer could include much more complicated logic that involves repositories from multiple domains.
+Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This example might be barren because we only implement simple logics. In production-level applications, this layer could include much more complicated logic that involves repositories from multiple domains.
 
 {{< code language="go" title="book_usecase.go" id="5" >}}
-
+   
     package usecase
 
     import (
         "context"
-        "encoding/json"
+        "github.com/ssentinull/create-apis-using-golang/pkg/utils"
 
         "github.com/sirupsen/logrus"
         "github.com/ssentinull/create-apis-using-golang/pkg/model"
@@ -213,49 +244,75 @@ Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This examp
         return &bookUsecase{bookRepo: br}
     }
 
-    func (bu *bookUsecase) GetBookByID(ctx context.Context, ID int64) (model.Book, error) {
-        book, err := bu.bookRepo.ReadBookByID(ctx, ID)
-        if err != nil {
-            c, err := json.Marshal(ctx)
-            if err != nil {
-                logrus.Error(err)
-            }
-
+    func (bu *bookUsecase) Create(ctx context.Context, input *model.CreateBookInput) (*model.Book, error) {
+        book := input.ToModel()
+        if err := bu.bookRepo.Create(ctx, book); err != nil {
             logrus.WithFields(logrus.Fields{
-                "ctx": c,
-                "ID":  ID,
+                "ctx":   utils.Dump(ctx),
+                "input": utils.Dump(input),
             }).Error(err)
-
-            return model.Book{}, err
+            return nil, err
         }
 
         return book, nil
     }
 
-    func (bu *bookUsecase) GetBooks(ctx context.Context) ([]model.Book, error) {
-        books, err := bu.bookRepo.ReadBooks(ctx)
+    func (bu *bookUsecase) DeleteByID(ctx context.Context, ID int64) error {
+        if err := bu.bookRepo.DeleteByID(ctx, ID); err != nil {
+            logrus.WithFields(logrus.Fields{
+                "ctx": utils.Dump(ctx),
+                "ID":  ID,
+            }).Error(err)
+            return err
+        }
+
+        return nil
+    }
+
+    func (bu *bookUsecase) FindByID(ctx context.Context, ID int64) (*model.Book, error) {
+        book, err := bu.bookRepo.FindByID(ctx, ID)
         if err != nil {
-            c, err := json.Marshal(ctx)
-            if err != nil {
-                logrus.Error(err)
-            }
+            logrus.WithFields(logrus.Fields{
+                "ctx": utils.Dump(ctx),
+                "ID":  ID,
+            }).Error(err)
+            return nil, err
+        }
 
-            logrus.WithField("ctx", c).Error(err)
+        return book, nil
+    }
 
+    func (bu *bookUsecase) FindAll(ctx context.Context) ([]*model.Book, error) {
+        books, err := bu.bookRepo.FindAll(ctx)
+        if err != nil {
+            logrus.WithField("ctx", utils.Dump(ctx)).Error(err)
             return nil, err
         }
 
         return books, nil
     }
 
+    func (bu *bookUsecase) Update(ctx context.Context, input *model.UpdateBookInput) (*model.Book, error) {
+        book, err := bu.bookRepo.Update(ctx, input.ToModel())
+        if err != nil {
+            logrus.WithFields(logrus.Fields{
+                "ctx":   utils.Dump(ctx),
+                "input": utils.Dump(input),
+            }).Error(err)
+            return nil, err
+        }
+
+        return book, nil
+    }
+
 {{< /code >}}
 
 ## Implementing Presenters.
 
-The presenters' role is to format data to and from our application. Since we're creating REST APIs, we'll format our data to JSON. The data to be formatted is retrieved from the previous layer, the use case layer. In a similar fashion to our repository layer, we'll create a `/pkg/book/handler/http` dir as a means of separation, if in the future we'd want to use a different method of presenting data, such as through CLI or RPC.
+The presenters' role is to format data to and from our application. We'll format our data to JSON because we're creating REST APIs. The data to be formatted is retrieved from the previous layer, the use case layer. In a similar fashion to our repository layer, we'll create a `/pkg/book/handler/http` dir as a means of separation. If in the future we'd want to use a different method of presenting data, such as through CLI or RPC, we can create separate directories.
 
 {{< code language="go" title="book_handler_http.go" id="6" >}}
-
+    
     package http
 
     import (
@@ -265,6 +322,7 @@ The presenters' role is to format data to and from our application. Since we're 
         "github.com/labstack/echo/v4"
         "github.com/sirupsen/logrus"
         "github.com/ssentinull/create-apis-using-golang/pkg/model"
+        "github.com/ssentinull/create-apis-using-golang/pkg/utils"
     )
 
     type BookHTTPHandler struct {
@@ -275,16 +333,50 @@ The presenters' role is to format data to and from our application. Since we're 
         handler := BookHTTPHandler{BookUsecase: bu}
 
         g := e.Group("/v1")
+        g.POST("/books", handler.CreateBook)
         g.GET("/books", handler.FetchBooks)
         g.GET("/books/:ID", handler.FetchBookByID)
+        g.PUT("/books", handler.UpdateBook)
+        g.DELETE("/books/:ID", handler.DeleteBookByID)
+    }
+
+    func (bh *BookHTTPHandler) CreateBook(c echo.Context) error {
+        input := new(model.CreateBookInput)
+        if err := c.Bind(input); err != nil {
+            logrus.Error(err)
+            return c.JSON(http.StatusBadRequest, err.Error())
+        }
+
+        book, err := bh.BookUsecase.Create(c.Request().Context(), input)
+        if err != nil {
+            logrus.Error(err)
+            return c.JSON(utils.ParseHTTPErrorStatusCode(err), err.Error())
+        }
+
+        return c.JSON(http.StatusCreated, book)
+    }
+
+    func (bh *BookHTTPHandler) DeleteBookByID(c echo.Context) error {
+        ID, err := strconv.ParseInt(c.Param("ID"), 10, 64)
+        if err != nil {
+            logrus.Error(err)
+            return c.JSON(http.StatusBadRequest, "ID param is invalid")
+        }
+
+        err = bh.BookUsecase.DeleteByID(c.Request().Context(), ID)
+        if err != nil {
+            logrus.Error(err)
+            return c.JSON(utils.ParseHTTPErrorStatusCode(err), err.Error())
+        }
+
+        return c.NoContent(http.StatusNoContent)
     }
 
     func (bh *BookHTTPHandler) FetchBooks(c echo.Context) error {
-        books, err := bh.BookUsecase.GetBooks(c.Request().Context())
+        books, err := bh.BookUsecase.FindAll(c.Request().Context())
         if err != nil {
             logrus.Error(err)
-
-            return c.JSON(http.StatusInternalServerError, err.Error())
+            return c.JSON(utils.ParseHTTPErrorStatusCode(err), err.Error())
         }
 
         return c.JSON(http.StatusOK, books)
@@ -294,15 +386,29 @@ The presenters' role is to format data to and from our application. Since we're 
         ID, err := strconv.ParseInt(c.Param("ID"), 10, 64)
         if err != nil {
             logrus.Error(err)
-
-            return c.JSON(http.StatusBadRequest, "url param is faulty")
+            return c.JSON(http.StatusBadRequest, "ID param is invalid")
         }
 
-        book, err := bh.BookUsecase.GetBookByID(c.Request().Context(), ID)
+        book, err := bh.BookUsecase.FindByID(c.Request().Context(), ID)
         if err != nil {
             logrus.Error(err)
+            return c.JSON(utils.ParseHTTPErrorStatusCode(err), err.Error())
+        }
 
-            return c.JSON(http.StatusInternalServerError, err.Error())
+        return c.JSON(http.StatusOK, book)
+    }
+
+    func (bh *BookHTTPHandler) UpdateBook(c echo.Context) error {
+        input := new(model.UpdateBookInput)
+        if err := c.Bind(input); err != nil {
+            logrus.Error(err)
+            return c.JSON(http.StatusBadRequest, err.Error())
+        }
+
+        book, err := bh.BookUsecase.Update(c.Request().Context(), input)
+        if err != nil {
+            logrus.Error(err)
+            return c.JSON(utils.ParseHTTPErrorStatusCode(err), err.Error())
         }
 
         return c.JSON(http.StatusOK, book)
@@ -313,7 +419,7 @@ The presenters' role is to format data to and from our application. Since we're 
 We use a `/v1` endpoint prefix as a safety net where our API consumers can quickly roll back if ever our new version has a critical bug. The final step would be to import our modules to the main app.
 
 {{< code language="go" title="main.go" id="7" >}}
-
+   
     package main
 
     import (
@@ -323,10 +429,10 @@ We use a `/v1` endpoint prefix as a safety net where our API consumers can quick
 
         "github.com/labstack/echo/v4"
         "github.com/sirupsen/logrus"
-        "github.com/ssentinull/create-apis-using-golang/config"
         _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/pkg/book/handler/http"
         _bookRepo "github.com/ssentinull/create-apis-using-golang/pkg/book/repository/postgres"
         _bookUcase "github.com/ssentinull/create-apis-using-golang/pkg/book/usecase"
+        "github.com/ssentinull/create-apis-using-golang/pkg/config"
     )
 
     // initialize logger configurations
@@ -373,7 +479,45 @@ We use a `/v1` endpoint prefix as a safety net where our API consumers can quick
 
 {{< /code >}}
 
-You're all set. Now run your server, open Postman, and try hitting `localhost:8080/v1/books` and `localhost:8080/v1/books/1`.
+Don't foget to add the helper functions in the `/pkg/utils` directory.
+
+{{< code language="go" title="dump.go" id="8" >}}
+    
+    package utils
+
+    import (
+        "encoding/json"
+        "github.com/sirupsen/logrus"
+    )
+
+    // Dump dump i to json
+    func Dump(i interface{}) string {
+        bt, err := json.Marshal(i)
+        if err != nil {
+            logrus.Error(err)
+        }
+
+        return string(bt)
+    }
+
+{{< /code >}}
+
+{{< code language="go" title="main.go" id="9" >}}
+
+    package utils
+
+    import "net/http"
+
+    func ParseHTTPErrorStatusCode(err error) int {
+        switch err {
+        default:
+            return http.StatusInternalServerError
+        }
+    }
+
+{{< /code >}}
+
+You're all set. Now run your server, open Postman, and try hitting `localhost:8080/v1/books` and `localhost:8080/v1/books/1` using `GET` method.
 
 {{< figure src="/img/blogs/create-api-using-golang-architecture/2.png" position="center" caption="" >}}
 
