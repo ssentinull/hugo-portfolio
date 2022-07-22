@@ -20,14 +20,14 @@ We'll be creating a simple project that revolves around the concept of libraries
 We'll use [Go Modules](https://go.dev/blog/using-go-modules) as our dependency management system and a couple of dependencies for our project:
 
 - [Echo](https://echo.labstack.com/) : performant and minimalist web framework
-- [Godotenv](https://github.com/joho/godotenv) : .env variables library
+- [Viper](https://github.com/spf13/viper) : go configurations with fangs
 - [Logrus](https://github.com/sirupsen/logrus) : structured and pluggable logging library
 
 ```shell
 $ git init
 $ go mod init github.com/your_github_username/create-apis-using-golang
 $ go get github.com/labstack/echo/v4
-$ go get github.com/joho/godotenv
+$ go get github.com/spf13/viper
 $ go get github.com/sirupsen/logrus
 ```
 
@@ -37,7 +37,7 @@ Codebase layout might be insignificant at first glance, but trust me when I say 
 
 ## Create Sample Web Server.
 
-To run a sample web server, create a `main.go` inside a `/cmd/server` directory. This dir is used to house our project's main application and nothing else. Our main application should only comprise mostly imports from our modules.
+To run a sample web server, create a `main.go` inside a `/pkg/cmd/server` directory. This dir is used to house our project's main application and nothing else. Our main application should only comprise mostly imports from our modules.
 
 {{< code language="go" title="main.go" id="1" >}}
 
@@ -143,7 +143,7 @@ What we need to do is create a `config.yml.example` in the root dir that will be
 
 {{< /code >}}
 
-Copy-paste the `config.yml.example` file, rename it to `config.yml`. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to store "configuration file templates or default configs". So we'll use this dir to place our getter functions in a file called `config.go` and call the functions in `main.go`.
+Copy-paste the `config.yml.example` file, rename it to `config.yml`. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to store "configuration file templates or default configs". So we'll use `/pkg/config` dir to place our getter functions in a file called `config.go` and call the functions in `main.go`.
 
 {{< code language="go" title="config.go" id="6" >}}
     
@@ -192,9 +192,6 @@ Copy-paste the `config.yml.example` file, rename it to `config.yml`. Revisiting 
 
         "github.com/labstack/echo/v4"
         "github.com/sirupsen/logrus"
-        _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/pkg/book/handler/http"
-        _bookRepo "github.com/ssentinull/create-apis-using-golang/pkg/book/repository/postgres"
-        _bookUcase "github.com/ssentinull/create-apis-using-golang/pkg/book/usecase"
         "github.com/ssentinull/create-apis-using-golang/pkg/config"
     )
 
