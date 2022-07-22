@@ -110,7 +110,7 @@ To catch any errors our project might have, we need a way to effectively log our
     func main() {
         e := echo.New()
         e.GET("/", func(c echo.Context) error {
-        return c.String(http.StatusOK, "Hello, World!")
+            return c.String(http.StatusOK, "Hello, World!")
         })
 
         s := &http.Server{
@@ -128,12 +128,12 @@ To catch any errors our project might have, we need a way to effectively log our
 
 Currently, the server is running on port `8080` and it's hard-coded into the server instance. Since the port number used might change depending on the server's used ports, we need to set that value as an environment variable. Environment variables are used to store interchangeable values, account credentials, and other secrets that we don't want everyone to know.
 
-What we need to do is create a `.env.example` in the root dir that will be used as a template for env variables in case someone else clones our repo. Also, create a `.gitignore` to ignore `.env` files from being committed to our repo.
+What we need to do is create a `config.yml.example` in the root dir that will be used as a template for env variables in case someone else clones our repo. Also, create a `.gitignore` to ignore `.yml` files from being committed to our repo.
 
-{{< code language="env" title=".env.example" id="4" >}}
+{{< code language="yml" title="config.yml.example" id="4" >}}
 
-    ENV=
-    SERVER_PORT=
+    env: "development"
+    server_port: "8080"
 
 {{< /code >}}
 
@@ -143,53 +143,46 @@ What we need to do is create a `.env.example` in the root dir that will be used 
 
 {{< /code >}}
 
-Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080` for `ENV` and `SERVER_PORT` respectively. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to store "configuration file templates or default configs". So we'll use this dir to place our getter functions in a file called `env.go` and call the functions in `main.go`.
+Copy-paste the `config.yml.example` file, rename it to `config.yml`. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to store "configuration file templates or default configs". So we'll use this dir to place our getter functions in a file called `config.go` and call the functions in `main.go`.
 
-{{< code language="go" title="env.go" id="6" >}}
-
+{{< code language="go" title="config.go" id="6" >}}
+    
     package config
 
     import (
-        "fmt"
-        "os"
-
-        "github.com/joho/godotenv"
         "github.com/sirupsen/logrus"
+        "github.com/spf13/viper"
+        "strings"
     )
 
-    func init() {
-        env := os.Getenv("ENV")
-        if env != "dev" && env != "" {
-            logrus.Warn("running using OS env variables")
+    func GetConf() {
+        viper.AddConfigPath(".")
+        viper.AddConfigPath("./..")
+        viper.AddConfigPath("./../..")
+        viper.SetConfigName("config")
+        viper.SetEnvPrefix("svc")
 
-            return
+        replacer := strings.NewReplacer(".", "_")
+        viper.SetEnvKeyReplacer(replacer)
+
+        viper.AutomaticEnv()
+        if err := viper.ReadInConfig(); err != nil {
+            logrus.Warningf("%v", err)
         }
+      }
 
-        if err := godotenv.Load(); err != nil {
-            logrus.Warn(".env file not found")
+      func Env() string {
+          return viper.GetString("env")
+      }
 
-            return
-        }
-
-        logrus.Warn("running using .env file")
-
-        return
-    }
-
-    // Env returns Env in .env
-    func Env() string {
-        return fmt.Sprintf("%s", os.Getenv("ENV"))
-    }
-
-    // ServerPort returns the server port in .env
-    func ServerPort() string {
-        return fmt.Sprintf("%s", os.Getenv("SERVER_PORT"))
-    }
+      func ServerPort() string {
+          return viper.GetString("server_port")
+      }
 
 {{< /code >}}
 
 {{< code language="go" title="main.go" id="7" >}}
-
+   
     package main
 
     import (
@@ -199,7 +192,10 @@ Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080
 
         "github.com/labstack/echo/v4"
         "github.com/sirupsen/logrus"
-        "github.com/ssentinull/create-apis-using-golang/config"
+        _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/pkg/book/handler/http"
+        _bookRepo "github.com/ssentinull/create-apis-using-golang/pkg/book/repository/postgres"
+        _bookUcase "github.com/ssentinull/create-apis-using-golang/pkg/book/usecase"
+        "github.com/ssentinull/create-apis-using-golang/pkg/config"
     )
 
     // initialize logger configurations
@@ -225,6 +221,7 @@ Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080
 
     // run initLogger() before running main()
     func init() {
+        config.GetConf()
         initLogger()
     }
 
