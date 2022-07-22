@@ -108,7 +108,7 @@ $ git push origin master
 
 Now that we got the appearance out of the way, let's continue to the main reason why we're making this site in the first place; to showcase yourself and your projects. We'll start with the former. In the navigation bar, there already exists a button that redirects you to the 'About' page. But if you click on it, Hugo will redirect you to a `404 Page Not Found` page. The reason is because that page doesn't exist yet.
 
-Hugo works is by reading contents of `.md` files inside the `/content` directory and generate static pages based on the texts inside said directory. How the static pages get routed is dictated in the `config.toml` file.
+Hugo works by reading the contents of `.md` files inside the `/content` directory, then it generates static pages based on the texts. How the static pages get routed is dictated in the `config.toml` file.
 
 {{< code language="toml" title="config.toml" id="2" isCollapsed="true" >}}
 
@@ -275,7 +275,7 @@ Finally, because we want our projects page to be our centerpiece, we need to mak
 
 Voila! :tada: :confetti_ball: You have successfully created your very own portfolio! :fire::fire:
 
-In less than an hour you've created yourself a beautiful, customizable portfolio website using Hugo. Now it's up to you to get creative with it by tweaking the themes and adding your own contents to it.
+In less than an hour you've created yourself a beautiful, customizable portfolio website using Hugo. Now it's up to you to get creative with it by tweaking the themes and adding your contents to it.
 
 I hope this could be beneficial to you. Thank you for taking the time to read this article. :pray:
 

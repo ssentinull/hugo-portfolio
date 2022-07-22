@@ -8,7 +8,7 @@ description: "A mobile-based application to spread awareness regarding breast ca
 
 ## Description.
 
-There two apps in this project; Jaga Sehat and Jaga Sehat Admin. Jaga Sehat is aimed at the general users, where they can read about breast cancer and find information of relevant institutions regarding breast cancer. While Jaga Sehat Admin is for the admins to monitor the demographics of the main app's user base.
+There two apps in this project; Jaga Sehat and Jaga Sehat Admin. Jaga Sehat is aimed at the general users, where they can read about breast cancer and find information about relevant institutions regarding breast cancer. While Jaga Sehat Admin is for the admins to monitor the demographics of the main app's user base.
 
 The Github repository for Jaga Sehat and Jaga Sehat Admin can be found [here](https://github.com/ssentinull/jaga-sehat) and [here](https://github.com/ssentinull/jaga-sehat-admin) respectively.
 

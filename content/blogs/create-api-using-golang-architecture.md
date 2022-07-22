@@ -502,7 +502,7 @@ Don't foget to add the helper functions in the `/pkg/utils` directory.
 
 {{< /code >}}
 
-{{< code language="go" title="main.go" id="9" >}}
+{{< code language="go" title="error.go" id="9" >}}
 
     package utils
 

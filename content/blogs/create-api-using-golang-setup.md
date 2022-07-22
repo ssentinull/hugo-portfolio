@@ -13,7 +13,7 @@ According to a [2021 survey](https://insights.stackoverflow.com/survey/2021#sect
 
 ## Project Description.
 
-We'll be creating a simple project that revolves around the concept of libraries. The APIs will allow us to get a catalog of books, filter books according to multiple categories, get the detailed information regarding each book, as well as borrow and return them. Seems straightforward, right?
+We'll be creating a simple project that revolves around the concept of libraries. The APIs will allow us to get a catalog of books, filter books according to multiple categories, get detailed information regarding each book, as well as borrow and return them. Seems straightforward, right?
 
 ## Initialize Dependencies.
 

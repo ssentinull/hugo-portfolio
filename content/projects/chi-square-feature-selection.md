@@ -35,7 +35,7 @@ This is a sub-project for my Bachelor's thesis. My main thesis project was to bu
 
 The input file can be found in the `./data/input/` directory, which stores a list of JSON objects with the following structure :
 
-{{< code language="json" title="Input Data." id="1" isCollapsed="true" >}}
+{{< code language="json" title="Input Data." id="1" isCollapsed="false" >}}
 [
 {
 "JOURNAL_ID": 0,
@@ -65,7 +65,7 @@ This module produces three different files with differing outputs:
 
 1. The file in the `./data/output/fv-tokens.json` directory is used to save the 150 aggregated words with the highest Chi-Square value for each journals and removes any duplicate words.
 
-   {{< code language="json" title="Aggregated words with the highest Chi-Square values from every journals." id="2" isCollapsed="true" >}}
+   {{< code language="json" title="Aggregated words with the highest Chi-Square values from every journals." id="2" isCollapsed="false" >}}
    [
    "tanam",
    "balai",
@@ -82,7 +82,7 @@ This module produces three different files with differing outputs:
 
 2. The file in the `./data/output/fv-tokens-by-journal.json` directory is used to save the 150 words with the highest Chi-Square values, grouped by their respectives journal IDs.
 
-   {{< code language="json" title="Words with the highest Chi-Square values for each journals." id="3" isCollapsed="true" >}}
+   {{< code language="json" title="Words with the highest Chi-Square values for each journals." id="3" isCollapsed="false" >}}
    {
    "0": [
    "tanam",
@@ -109,7 +109,7 @@ This module produces three different files with differing outputs:
 
 3. The file in the `./data/output/chi-square-feature-vectors.json` directory is used to log the **_A_**, **_B_**, **_C_**, **_D_**, journal ID, and Chi-Square values for each word.
 
-   {{< code language="json" title="Chi-Square value & variables for every words from each journals." id="4" isCollapsed="true" >}}
+   {{< code language="json" title="Chi-Square value & variables for every words from each journals." id="4" isCollapsed="false" >}}
    [
    {
    "JOURNAL_ID": 0,

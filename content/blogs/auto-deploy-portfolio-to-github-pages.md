@@ -9,7 +9,7 @@ tags: ["deployment", "portfolio", "hugo", "github", "git", "shell"]
 
 ## Introduction.
 
-In the [previous article](/blogs/create-a-portfolio-using-hugo), we've covered how to create a beautiful portfolio using Hugo in less than an hour. But what good is it to have an awesome portfolio if no one can see it? So in this article, I'll be showing you how to set up an automatic deployment flow that will deploy to Github Pages using shell scripts.
+In the [previous article](/blogs/create-a-portfolio-using-hugo) we covered how to create a beautiful portfolio using Hugo in less than an hour. But what good is it to have an awesome portfolio if no one can see it? So in this article, I'll be showing you how to set up an automatic deployment flow that will deploy to Github Pages using shell scripts.
 
 > :mega: **Shout-out!** :mega:
 >
@@ -17,11 +17,11 @@ In the [previous article](/blogs/create-a-portfolio-using-hugo), we've covered h
 
 ## What is Github Pages.
 
-Github Pages is a feature in Github that allows you to host the content of a repository. You don't have to set up any servers nor domain names, Github does that automatically for you. All you have to do is provide the content, let Github takes care of the rest.
+Github Pages is a feature in Github that allows you to host the content of a repository. You don't have to set up any servers or domain names, Github does that automatically for you. All you have to do is provide the content and let Github takes care of the rest.
 
 However, this ease of use comes with a couple of rules that you must follow. By default, every user is granted a single domain tied to their account, `username.github.io`. And by default, that domain will also be tied to the master branch of the repository with the same name. Since my username is `ssentinull`, my domain will be `ssentinull.github.io`, and this domain will refer to the master branch of `ssentinull.github.io` repository in my account.
 
-With that said, it doesn't mean that Github allows you to host only one repo. No no. If you want to host additional repo, the domain will still be `username.github.io`, but that domain will have an additional endpoint with the value being the project name. So to access your additional hosted repo, the URL will look like something this `username.github.io/project-name`.
+With that said, it doesn't mean that Github allows you to host only one repo. No no. If you want to host additional repo, the domain will still be `username.github.io`, but that domain will have an additional endpoint with the value being the project name. So to access your additional hosted repo, the URL will look like something this: `username.github.io/project-name`.
 
 Since I'm already using Github Pages for my blog in my Github account, I'll use a different account, so please don't mind the difference in username.
 
@@ -85,7 +85,7 @@ If your repo name is `username.github.io` then Github should automatically enabl
 
 {{< image src="/img/blogs/auto-deploy-portfolio-to-github-pages/1.png" position="center" >}}
 
-We've successfully deployed our portfolio to Github Pages!! :tada: :confetti_ball: It wasn't that difficult, right? But then again, if we have to push to multiple repos to deploy our portfolio everytime we make a change could be rather cumbersome. Thankfully, there's a way to automate it.
+We've successfully deployed our portfolio to Github Pages!! :tada: :confetti_ball: It wasn't that difficult, right? But then again, if we have to push to multiple repos to deploy our portfolio every time we make a change could be rather cumbersome. Thankfully, there's a way to automate it.
 
 ## Automate the deployment process.
 
