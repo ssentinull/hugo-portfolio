@@ -13,19 +13,19 @@ In the [previous](/blogs/create-api-using-golang-setup/) article, we've set up o
 
 ## What is Architecture.
 
-Before jumping to Clean Architecture, let's discuss what 'architecture' actually is. Different experts have different definitions of what architecture exactly is. Some say it's 'the fundamental organization of a system' while others define it as 'the way the highest level components are wired together. Since I'm nowhere near to being an expert, I'll just have to defer to the definition provided by the experts, which in essence is 'how we organize our system'.
+Before jumping to Clean Architecture, let's discuss what _architecture_ is. Different experts have different definitions of what architecture exactly is. Some say it's _the fundamental organization of a system_ while others define it as _the way the highest-level components are wired together_. Since I'm nowhere near to being an expert, I'll just have to defer to the definition provided by the experts, which in essence is _how we organize our system_.
 
 ## Why bother with Architecture.
 
 The quote below sums up why architecture is important.
 
-> _"A poor architecture is a major contributor to the growth of cruft - elements of the software that impede the ability of developers to understand the software. Software that contains a lot of cruft is much harder to modify, leading to features that arrive more slowly and with more defects."_
+> _"Poor architecture is a major contributor to the growth of cruft - elements of the software that impede the ability of developers to understand the software. Software that contains a lot of cruft is much harder to modify, leading to features that arrive more slowly and with more defects."_
 >
 > -- **Martin Fowler, 2019**
 
 ## What is Clean Architecture.
 
-Clean Architecture is a concept forwarded by Robert C. Martin (Uncle Bob) in 2021. It takes a layered approach, where a system is divided into multiple layers, each having its roles and rules it must abide by. If drawn into a diagram, Clean Architecture would look like the cross-section of Earth, where Earth's core would be the innermost circle, and encapsulating it are the numerous layers that make up the Earth's mantle.
+_Clean Architecture_ is a concept forwarded by Robert C. Martin (Uncle Bob) in 2021. It takes a layered approach, where a system is divided into multiple layers, each having its roles and rules it must abide by. If drawn into a diagram, Clean Architecture would look like the cross-section of Earth, where Earth's core would be the innermost circle, and encapsulating it are the numerous layers that make up the Earth's mantle.
 
 {{< figure src="/img/blogs/create-api-using-golang-architecture/1.jpg" position="center" caption="Clean Architecture Diagram" >}}
 
@@ -33,14 +33,14 @@ This layering technique produces a system that's testable, independent of framew
 
 As seen in the diagram above, the architecture comprises four layers:
 
-1. Entities - objects that correlate to the business at hand.
-2. Use Cases - manages the flow of data to and from entities.
+1. Enterprise Business Rules - objects that correlate to the business at hand.
+2. Application Business Rules - manages the flow of data to and from entities.
 3. Interface Adapters - converts use cases' data format to a more general data format.
-4. Frameworks and Drives - external frameworks and tools.
+4. Frameworks & Drives - external frameworks and tools.
 
-## Implementing Entities.
+## Implementing Enterprise Business Rules.
 
-In our project, we'll refer to 'entities' as 'models'. Since we're making a library app, we'll be dealing with books, so a book is our entity. For the book entity, let's just use the most basic property that a book has, plus a couple of necessary attributes for our database; ID, Title, Author, Description, Published At, Created At, Updated At, Deleted At. Referring back to the [Golang Standard Layout](https://github.com/golang-standards/project-layout), all modules that are meant to be exported must be placed in the `/pkg` dir. So, we create a `/pkg/model`, a place where all future entities will reside, and place `book.go` there.
+In our project, we'll refer to _Enterprise Business Rules_ as _Models_. Since we're making a library app, we'll be dealing with books, so a _book_ is our entity. For the _book_ entity, let's just use the most basic property that a book has, plus a couple of necessary attributes for our database; ID, Title, Author, Description, Published At, Created At, Updated At, Deleted At. Referring back to the [Golang Standard Layout](https://github.com/golang-standards/project-layout), all modules that are meant to be exported must be placed in the `/internal` dir. So, we create a `/internal/model`, a place where all future entities will reside, and place `book.go` there.
 
 {{< code language="go" title="book.go" id="1" >}}
 
@@ -101,15 +101,15 @@ In our project, we'll refer to 'entities' as 'models'. Since we're making a libr
 
 {{< /code >}}
 
-## Implementing Use Cases.
+## Implementing Application Business Rules.
 
-The use cases in our app will be divided into two parts; usecase (I know it's redundant but it explains itself as we proceed) and repository. Usecase will only include business logic while repository will only include transactions to our data store. One can not happen within the other, eg: a business logic can not happen in a repository and a usecase can not make calls directly to our data store.
+_Application Business Rules_ are also known as _Use Cases_. The _use cases_ in our app will be divided into two parts; _usecase_ (I know it's redundant but it explains itself as we proceed) and _repository_. _Usecase_ will only include business logic while _repository_ will only include transactions to our data store. One can not happen within the other, eg: a business logic can not happen in a repository and a usecase can not make calls directly to our data store.
 
 ### Implementing Repository.
 
-We'll start with repository. Since we need a place to store our books, we need a database. Repository comes into play when we want to interact with our database. Fetch, create, update, and delete data from and to our database happens exclusively in our repository. In the meantime, we'll use dummy data since we won't cover database connections in this part of the series.
+We'll start with _repository_. Since we need a place to store our books, we need a database. _Repository_ comes into play when we want to interact with our database. Fetch, create, update, and delete data from and to our database happens exclusively in our _repository_. Since we won't cover database connections in this part of the series, we'll use dummy data in the meantime.
 
-Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
+Before we create the _repository_, make sure to define a book _repository interface_ in our book model. The _interface_ is used as a means of contract and communication between the layers.
 
 {{< code language="go" title="book.go" id="2" >}}
 
@@ -125,11 +125,9 @@ Before we create the repository, make sure to define a book repository interface
 
 {{< /code >}}
 
-Differing from the intention of `/pkg/model` directory, we'll create a `/pkg/book` directory to signify that all the codes within it are of the 'book' domain. If there are new entities, we'll create separate domains for them.
+Differing from the intention of `/internal/model` directory, we'll create a `/interal/repository` directory to signify that all the codes within it are _repository_ codes.
 
-Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We create a `/postgres` dir as a means of separation. If in the future we would like to use another database for the 'book' domain, let's say MongoDB, then we'll create a `/mongodb` inside the `/repository` dir. Create `book_repository_postgres.go` inside this dir.
-
-{{< code language="go" title="book_repository_postgres.go" id="3" >}}
+{{< code language="go" title="book_repository.go" id="3" >}}
 
     package postgres
 
@@ -137,7 +135,7 @@ Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We cre
         "context"
         "time"
 
-        "github.com/ssentinull/create-apis-using-golang/pkg/model"
+        "github.com/ssentinull/create-apis-using-golang/internal/model"
     )
 
     type bookRepo struct{}
@@ -207,7 +205,7 @@ Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We cre
 
 ### Implementing Usecases.
 
-The usecase layer should only involve business logic and calls to the repository layer. Just like the repository layer, we have to define a book usecase interface in the book model.
+The _usecase_ layer should only involve business logic and calls to the repository layer. Just like the _repository_ layer, we have to define a book _usecase interface_ in the book model.
 
 {{< code language="go" title="book.go" id="4" >}}
 
@@ -223,7 +221,7 @@ The usecase layer should only involve business logic and calls to the repository
 
 {{< /code >}}
 
-Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This example might be barren because we only implement simple logics. In production-level applications, this layer could include much more complicated logic that involves repositories from multiple domains.
+Create a `/internal/usecase` dir and place a `book_usecase.go` in it. This example might be barren because we only implement simple logics. In production-level applications, this layer could include much more complicated logic that involves _repositories_ from multiple domains.
 
 {{< code language="go" title="book_usecase.go" id="5" >}}
 
@@ -231,10 +229,10 @@ Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This examp
 
     import (
         "context"
-        "github.com/ssentinull/create-apis-using-golang/pkg/utils"
 
         "github.com/sirupsen/logrus"
-        "github.com/ssentinull/create-apis-using-golang/pkg/model"
+        "github.com/ssentinull/create-apis-using-golang/internal/model"
+        "github.com/ssentinull/create-apis-using-golang/internal/utils"
     )
 
     type bookUsecase struct {
@@ -308,9 +306,9 @@ Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This examp
 
 {{< /code >}}
 
-## Implementing Presenters.
+## Implementing Interface Adapters.
 
-The presenters' role is to format data to and from our application. We'll format our data to JSON because we're creating REST APIs. The data to be formatted is retrieved from the previous layer, the use case layer. In a similar fashion to our repository layer, we'll create a `/pkg/book/handler/http` dir as a means of separation. If in the future we'd want to use a different method of presenting data, such as through CLI or RPC, we can create separate directories.
+_Interface Adapters_ are commonly known as _Handlers_, _Presenters_, or _Deliveries_, in this project we refer to them as _Deliveries_. The delivery's role is to format data to and from our application. We'll format our data to JSON because we're creating REST APIs. The data to be formatted is retrieved from the previous layer, the _usecase_ layer. In a similar fashion to our _repository_ layer, we'll create a `/internal/delivery/http` dir as a means of separation. If in the future we'd want to use a different method of presenting data, such as through GraphQL or RPC, we can create separate directories.
 
 {{< code language="go" title="book_handler_http.go" id="6" >}}
 
@@ -322,8 +320,8 @@ The presenters' role is to format data to and from our application. We'll format
 
         "github.com/labstack/echo/v4"
         "github.com/sirupsen/logrus"
-        "github.com/ssentinull/create-apis-using-golang/pkg/model"
-        "github.com/ssentinull/create-apis-using-golang/pkg/utils"
+        "github.com/ssentinull/create-apis-using-golang/internal/model"
+        "github.com/ssentinull/create-apis-using-golang/internal/utils"
     )
 
     type BookHTTPHandler struct {
@@ -430,10 +428,10 @@ We use a `/v1` endpoint prefix as a safety net where our API consumers can quick
 
         "github.com/labstack/echo/v4"
         "github.com/sirupsen/logrus"
-        _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/pkg/book/handler/http"
-        _bookRepo "github.com/ssentinull/create-apis-using-golang/pkg/book/repository/postgres"
-        _bookUcase "github.com/ssentinull/create-apis-using-golang/pkg/book/usecase"
-        "github.com/ssentinull/create-apis-using-golang/pkg/config"
+        "github.com/ssentinull/create-apis-using-golang/internal/config"
+        _bookHTTPHndlr "github.com/ssentinull/create-apis-using-golang/internal/delivery/http"
+        _bookRepo "github.com/ssentinull/create-apis-using-golang/internal/repository"
+        _bookUcase "github.com/ssentinull/create-apis-using-golang/internal/usecase"
     )
 
     // initialize logger configurations
@@ -459,6 +457,7 @@ We use a `/v1` endpoint prefix as a safety net where our API consumers can quick
 
     // run initLogger() before running main()
     func init() {
+        config.GetConf()
         initLogger()
     }
 
@@ -480,7 +479,7 @@ We use a `/v1` endpoint prefix as a safety net where our API consumers can quick
 
 {{< /code >}}
 
-Don't foget to add the helper functions in the `/pkg/utils` directory.
+Don't forget to add the helper functions in the `/internal/utils` directory.
 
 {{< code language="go" title="dump.go" id="8" >}}
 
@@ -524,11 +523,9 @@ You're all set. Now run your server, open Postman, and try hitting `localhost:80
 
 {{< figure src="/img/blogs/create-api-using-golang-architecture/3.png" position="center" caption="" >}}
 
-By this step, your directory should look like this.
-
-{{< image src="/img/blogs/create-api-using-golang-architecture/4.png" position="center" >}}
-
 Congrats!! :partying_face: You've created APIs using Golang and implemented Clean Architecture!! :clap: The next step would be to connect a database to our application.
+
+The Github repository for this step of this series can be found [here](https://github.com/ssentinull/create-apis-using-golang/tree/2c0fba5724f7e6d1352c9e34aa9f9c09a1303df5).
 
 I hope this could be beneficial to you. Thank you for taking the time to read this article. :pray:
 
