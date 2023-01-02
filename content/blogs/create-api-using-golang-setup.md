@@ -9,7 +9,7 @@ tags: ["environment", "api", "golang"]
 
 ## Introduction.
 
-According to a [2021 survey](https://insights.stackoverflow.com/survey/2021#section-most-popular-technologies-programming-scripting-and-markup-languages) conducted by StackOverflow, Golang is number fourteen in terms of the most used language/tool amongst developers, right above Kotlin and below PowerShell. This is for good reasons. Its no-frills syntax, static typing, out-of-the-box build tools, and performant concurrency are a few reasons why developers, including me, prefer it over the rest. In this series of tutorials, we'll cover how to build APIs using Golang.
+According to a [2021 survey](https://insights.stackoverflow.com/survey/2021#section-most-popular-technologies-programming-scripting-and-markup-languages) conducted by StackOverflow, Golang is number fourteen in terms of the most used language / tool amongst developers, right above Kotlin and below PowerShell. This is for good reasons. Its no-frills syntax, static typing, out-of-the-box build tools, and performant concurrency are a few reasons why developers, including me, prefer it over the rest. In this series of tutorials, we'll cover how to build APIs using Golang.
 
 ## Project Description.
 
@@ -17,27 +17,27 @@ We'll be creating a simple project that revolves around the concept of libraries
 
 ## Initialize Dependencies.
 
-We'll use [Go Modules](https://go.dev/blog/using-go-modules) as our dependency management system and a couple of dependencies for our project:
+We'll use [Go Modules](https://go.dev/blog/using-go-modules) as our dependency management system and a couple of dependencies to setup our project:
 
-- [Echo](https://echo.labstack.com/) : performant and minimalist web framework
-- [Godotenv](https://github.com/joho/godotenv) : .env variables library
-- [Logrus](https://github.com/sirupsen/logrus) : structured and pluggable logging library
+- [Echo](https://echo.labstack.com/) : performant and minimalist web framework.
+- [Viper](https://github.com/spf13/viper) : environment variable configurations library.
+- [Logrus](https://github.com/sirupsen/logrus) : structured and pluggable logging library.
 
 ```shell
 $ git init
 $ go mod init github.com/your_github_username/create-apis-using-golang
 $ go get github.com/labstack/echo/v4
-$ go get github.com/joho/godotenv
+$ go get github.com/spf13/viper
 $ go get github.com/sirupsen/logrus
 ```
 
 ## Plan Codebase Layout.
 
-Codebase layout might be insignificant at first glance, but trust me when I say this, it will hinder your productivity in the long run if you don't carefully plan it in the beginning. That's why I suggest following the highly rated ones instead of just creating your own from scratch, especially if you don't have a plan of how to structure your layout. In this series, we'll be using the [Go Standard Layout](https://github.com/golang-standards/project-layout), with some modifications of course. The Github page provides thorough explanations and examples behind the reasoning of the layout and based on the repo's 27k+ stars, I think it's a great place to start.
+Codebase layout might be insignificant at first glance, but trust me when I say this, it will hinder your productivity in the long run if you don't carefully plan it in the beginning. That's why I suggest following the highly rated ones instead of just creating your own from scratch, especially if you don't have a plan of how to structure your layout. In this series, we'll be using the [Go Standard Layout](https://github.com/golang-standards/project-layout), with some modifications of course. The Github page provides thorough explanations and examples behind the reasoning of the layout and based on the repo's 36k+ stars, I think it's a great place to start.
 
 ## Create Sample Web Server.
 
-To run a sample web server, create a `main.go` inside a `/cmd/server` directory. This dir is used to house our project's main application and nothing else. Our main application should only comprise mostly imports from our modules.
+To run a sample web server, create a `main.go` inside a `/internal/cmd/server` directory. This dir is used to house our project's main application and nothing else. Our main application should only comprise mostly imports from our modules.
 
 {{< code language="go" title="main.go" id="1" >}}
 
@@ -128,62 +128,56 @@ To catch any errors our project might have, we need a way to effectively log our
 
 Currently, the server is running on port `8080` and it's hard-coded into the server instance. Since the port number used might change depending on the server's used ports, we need to set that value as an environment variable. Environment variables are used to store interchangeable values, account credentials, and other secrets that we don't want everyone to know.
 
-What we need to do is create a `.env.example` in the root dir that will be used as a template for env variables in case someone else clones our repo. Also, create a `.gitignore` to ignore `.env` files from being committed to our repo.
+What we need to do is create a `config.yml.example` in the root dir that will be used as a template for environment variables in case someone else clones our repo. Also, create a `.gitignore` to ignore `config.yml` files from being committed to our repo.
 
-{{< code language="env" title=".env.example" id="4" >}}
+{{< code language="yml" title="config.yml.example" id="4" >}}
 
-    ENV=
-    SERVER_PORT=
-
-{{< /code >}}
-
-{{< code language="gitignore" title=".gitignore" id="5" >}}
-
-    .env
+    env:
+    server_port:
 
 {{< /code >}}
 
-Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080` for `ENV` and `SERVER_PORT` respectively. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to store "configuration file templates or default configs". So we'll use this dir to place our getter functions in a file called `env.go` and call the functions in `main.go`.
+{{< code language=".gitignore" title=".gitignore" id="5" >}}
 
-{{< code language="go" title="env.go" id="6" >}}
+    config.yml
+
+{{< /code >}}
+
+Copy-paste the `config.yml.example` file, rename it to `config.yml`, and set `DEV` and `8080` for `env` and `server_port` respectively. Revisiting back to the golang standard layout repo, we see that `/config` dir is stated to _store configuration file templates or default configs_. So we'll use `/internal/config` dir to place our getter functions in a file called `config.go` and call the functions in `main.go`.
+
+{{< code language="go" title="config.go" id="6" >}}
 
     package config
 
     import (
-        "fmt"
-        "os"
+        "strings"
 
-        "github.com/joho/godotenv"
         "github.com/sirupsen/logrus"
+        "github.com/spf13/viper"
     )
 
-    func init() {
-        env := os.Getenv("ENV")
-        if env != "dev" && env != "" {
-            logrus.Warn("running using OS env variables")
+    func GetConf() {
+        viper.AddConfigPath(".")
+        viper.AddConfigPath("./..")
+        viper.AddConfigPath("./../..")
+        viper.SetConfigName("config")
+        viper.SetEnvPrefix("svc")
 
-            return
+        replacer := strings.NewReplacer(".", "_")
+        viper.SetEnvKeyReplacer(replacer)
+
+        viper.AutomaticEnv()
+        if err := viper.ReadInConfig(); err != nil {
+            logrus.Warningf("%v", err)
         }
-
-        if err := godotenv.Load(); err != nil {
-            logrus.Warn(".env file not found")
-
-            return
-        }
-
-        logrus.Warn("running using .env file")
-
-        return
     }
 
-    // Env returns Env in .env
     func Env() string {
-        return fmt.Sprintf("%s", os.Getenv("ENV"))
+        return viper.GetString("env")
     }
 
-    // ServerPort returns the server port in .env
     func ServerPort() string {
-        return fmt.Sprintf("%s", os.Getenv("SERVER_PORT"))
+        return viper.GetString("server_port")
     }
 
 {{< /code >}}
@@ -199,7 +193,7 @@ Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080
 
         "github.com/labstack/echo/v4"
         "github.com/sirupsen/logrus"
-        "github.com/ssentinull/create-apis-using-golang/config"
+        "github.com/ssentinull/create-apis-using-golang/internal/config"
     )
 
     // initialize logger configurations
@@ -247,12 +241,12 @@ Copy-paste the `.env.example` file, rename it to `.env`, and set `DEV` and `8080
 
 ## Setup Daemons. :smiling_imp:
 
-To make our life easier, we need to set up a daemon that listens to changes made in the workspace so that the server can automatically restart itself on saved changes. We do this by installing [Modd](https://github.com/cortesi/modd) and setting it to listen to files with `.go` extensions. Create a `.modd` dir and within it a `server.modd.conf` file. Also, create a `Makefile` in the root dir to abbreviate our CLI command.
+To make our life easier, we need to set up a daemon that listens to changes made in the workspace so that the server can automatically restart itself on saved changes. We do this by installing [Modd](https://github.com/cortesi/modd) and setting it to listen to files with `.go` extensions. Create a `.modd` dir in our root directory and within it a `server.modd.conf` file. Also, create a `Makefile` in the root dir to abbreviate our CLI command.
 
 {{< code language="conf" title="server.modd.conf" id="8" >}}
 
     **/\*.go !**/\*\_test.go {
-        daemon +sigterm: go run cmd/server/main.go
+        daemon +sigterm: go run internal/cmd/server/main.go
     }
 
 {{< /code >}}
