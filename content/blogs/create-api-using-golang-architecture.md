@@ -43,7 +43,7 @@ As seen in the diagram above, the architecture comprises four layers:
 In our project, we'll refer to 'entities' as 'models'. Since we're making a library app, we'll be dealing with books, so a book is our entity. For the book entity, let's just use the most basic property that a book has, plus a couple of necessary attributes for our database; ID, Title, Author, Description, Published At, Created At, Updated At, Deleted At. Referring back to the [Golang Standard Layout](https://github.com/golang-standards/project-layout), all modules that are meant to be exported must be placed in the `/pkg` dir. So, we create a `/pkg/model`, a place where all future entities will reside, and place `book.go` there.
 
 {{< code language="go" title="book.go" id="1" >}}
-  
+
     package model
 
     import (
@@ -106,6 +106,7 @@ In our project, we'll refer to 'entities' as 'models'. Since we're making a libr
 The use cases in our app will be divided into two parts; usecase (I know it's redundant but it explains itself as we proceed) and repository. Usecase will only include business logic while repository will only include transactions to our data store. One can not happen within the other, eg: a business logic can not happen in a repository and a usecase can not make calls directly to our data store.
 
 ### Implementing Repository.
+
 We'll start with repository. Since we need a place to store our books, we need a database. Repository comes into play when we want to interact with our database. Fetch, create, update, and delete data from and to our database happens exclusively in our repository. In the meantime, we'll use dummy data since we won't cover database connections in this part of the series.
 
 Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
@@ -129,7 +130,7 @@ Differing from the intention of `/pkg/model` directory, we'll create a `/pkg/boo
 Inside `/pkg/book` dir, create another dir called `/repository/postgres`. We create a `/postgres` dir as a means of separation. If in the future we would like to use another database for the 'book' domain, let's say MongoDB, then we'll create a `/mongodb` inside the `/repository` dir. Create `book_repository_postgres.go` inside this dir.
 
 {{< code language="go" title="book_repository_postgres.go" id="3" >}}
-    
+
     package postgres
 
     import (
@@ -211,7 +212,7 @@ The usecase layer should only involve business logic and calls to the repository
 {{< code language="go" title="book.go" id="4" >}}
 
     ...
-    
+
     type BookUsecase interface {
         Create(ctx context.Context, input *CreateBookInput) (book *Book, err error)
         DeleteByID(ctx context.Context, ID int64) (err error)
@@ -225,7 +226,7 @@ The usecase layer should only involve business logic and calls to the repository
 Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This example might be barren because we only implement simple logics. In production-level applications, this layer could include much more complicated logic that involves repositories from multiple domains.
 
 {{< code language="go" title="book_usecase.go" id="5" >}}
-   
+
     package usecase
 
     import (
@@ -312,7 +313,7 @@ Create a `/pkg/book/usecase` dir and place a `book_usecase.go` in it. This examp
 The presenters' role is to format data to and from our application. We'll format our data to JSON because we're creating REST APIs. The data to be formatted is retrieved from the previous layer, the use case layer. In a similar fashion to our repository layer, we'll create a `/pkg/book/handler/http` dir as a means of separation. If in the future we'd want to use a different method of presenting data, such as through CLI or RPC, we can create separate directories.
 
 {{< code language="go" title="book_handler_http.go" id="6" >}}
-    
+
     package http
 
     import (
@@ -419,7 +420,7 @@ The presenters' role is to format data to and from our application. We'll format
 We use a `/v1` endpoint prefix as a safety net where our API consumers can quickly roll back if ever our new version has a critical bug. The final step would be to import our modules to the main app.
 
 {{< code language="go" title="main.go" id="7" >}}
-   
+
     package main
 
     import (
@@ -482,7 +483,7 @@ We use a `/v1` endpoint prefix as a safety net where our API consumers can quick
 Don't foget to add the helper functions in the `/pkg/utils` directory.
 
 {{< code language="go" title="dump.go" id="8" >}}
-    
+
     package utils
 
     import (
