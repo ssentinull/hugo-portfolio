@@ -13,13 +13,13 @@ In the [previous](/blogs/create-api-using-golang-setup/) article, we've set up o
 
 ## What is Architecture.
 
-Before jumping to Clean Architecture, let's discuss what an 'architecture' actually is. Different experts have different definitions of what architecture exactly is. Some say it's 'the fundamental organization of a system' while others define it as 'the way the highest level components are wired together. Since I'm nowhere near to being an expert, I'll just have to defer to the definition provided by the experts, which in essence is 'how we organize our system'.
+Before jumping to Clean Architecture, let's discuss what 'architecture' actually is. Different experts have different definitions of what architecture exactly is. Some say it's 'the fundamental organization of a system' while others define it as 'the way the highest level components are wired together. Since I'm nowhere near to being an expert, I'll just have to defer to the definition provided by the experts, which in essence is 'how we organize our system'.
 
 ## Why bother with Architecture.
 
 The quote below sums up why architecture is important.
 
-> _"A poor architecture is a major contributor to the growth of cruft - elements of the software that impede the ability of developers to understand the software. Software that contains a lot of cruft is much harder to modify, leading to features that arrive more slowly and with more defects."_
+> _"Poor architecture is a major contributor to the growth of cruft - elements of the software that impede the ability of developers to understand the software. Software that contains a lot of cruft is much harder to modify, leading to features that arrive more slowly and with more defects."_
 >
 > -- **Martin Fowler, 2019**
 
@@ -31,7 +31,7 @@ Clean Architecture is a concept forwarded by Robert C. Martin (Uncle Bob) in 202
 
 This layering technique produces a system that's testable, independent of frameworks, independent of UI, independent of database, and independent of any external agency. The rule of this architecture is very straightforward; source code dependencies can only point inwards. In other words, the inner circle can know nothing about the outer circle, while something declared in the outer circle can not be mentioned in the inner circle.
 
-As seen in the diagram above, the architecture comprises of four layers:
+As seen in the diagram above, the architecture consists of four layers:
 
 1. Entities - business rules in the form of objects with methods, or a set of data structures with functions.
 2. Use Cases - manages the flow of data to and from entities.
@@ -63,7 +63,7 @@ In our project, we'll refer to 'entities' as 'models'. Since we're making a libr
 
 ## Implementing External Interfaces.
 
-The external interface that we use in our app is in the form of a database connection. We'll cover more in-depth regarding database setup in part three of this series, but in the meantime, we'll focus on how a database connection is implemented as an individual layer. Since we're dealing with datastore, we'll use the term 'repository' instead of 'external interface'.
+The external interface that we use in our app is in the form of a database connection. We'll cover more in-depth regarding database setup in part three of this series, but in the meantime, we'll focus on how a database connection is implemented as an individual layer. Since we're dealing with a data store, we'll use the term 'repository' instead of 'external interface'.
 
 Before we create the repository, make sure to define a book repository interface in our book model. The interface is used as a means of contract and communication between the layers.
 
