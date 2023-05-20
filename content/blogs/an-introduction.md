@@ -1,6 +1,6 @@
 ---
 title: "An Introduction."
-date: "2021-11-23"
+date: "2023-05-20"
 author: "ssentinull"
 cover: "img/introduction.jpg"
 description: "For those wondering what this site is all about."
