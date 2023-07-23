@@ -12,19 +12,21 @@ showReadingTime = false
 
 [languages]
 [languages.en]
+title = "ssentinull"
 copyright = ""
-dateFormatList = "02-01-2006"
-dateFormatSingle = "02-01-2006"
+
+[languages.en.params]
+subtitle = "a simple about / blog / portfolio site"
 keywords = ""
-menuMore = "Show More"
+writtenBy = "Written by"
 minuteReadingTime = "min read"
+dateFormatSingle = "02-01-2006"
+dateFormatList = "02-01-2006"
 newerPosts = "Newer posts"
 olderPosts = "Older posts"
-readMore = "Read more"
 readOtherPosts = "Read other posts"
-subtitle = "a simple about / blog / portfolio site"
-title = "ssentinull"
-writtenBy = "Written by"
+readMore = "Read more"
+menuMore = "Show More"
 
 [languages.en.params.logo]
 logoHomeLink = "/"
