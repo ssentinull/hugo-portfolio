@@ -1,6 +1,6 @@
 ---
 title: "Create APIs using Golang | Part 4 : Implementing Cache."
-date: "2023-06-23"
+date: "2023-07-22"
 author: "ssentinull"
 cover: "img/blogs/create-api-using-golang-cache/0.jpg"
 description: "*Cache* is King."
@@ -333,7 +333,7 @@ $ make seed-db seed=100
 
 After we run the above command, we'll see that our `books` table have been filled with 100 rows of data in our database client.
 
-{{< figure src="/img/blogs/create-api-using-golang-cache/1.png" position="center" >}}
+{{< figure src="/img/blogs/create-api-using-golang-cache/1.jpg" position="center" >}}
 
 ## Performance Metrics.
 
@@ -350,15 +350,15 @@ We'll be using `/books` to compare the metrics because fetching multple data wou
 
 The first time we fetch books, the data isn't cached, giving us `3.64ms` as the baseline performance of our API.
 
-{{< figure src="/img/blogs/create-api-using-golang-cache/2.png" position="center" >}}
+{{< figure src="/img/blogs/create-api-using-golang-cache/2.jpg" position="center" >}}
 
-However, upon hitting the same API again, the cache is already set, resulting in a noticeable improvement in response time to `1.35ms`!
+However, upon hitting the same API again, the cache is already set, resulting in a noticeable improvement in response time to `1.35ms`.
 
-{{< figure src="/img/blogs/create-api-using-golang-cache/3.png" position="center" >}}
+{{< figure src="/img/blogs/create-api-using-golang-cache/3.jpg" position="center" >}}
 
 If we add a new book and fetch books again, the response time will be similar to the baseline performance, as the cache is invalidated when we insert a new book. Afterward, the cache will be in place, and we'll get back our performance increase.
 
-While our baseline performance may already be fast for local server access with a single user, consider a scenario where the service is hosted on a server in another country and thousands of people access the API every second. Without caching, performance could suffer dramatically.
+The performance improvements might seem negligible at first glance, but try to consider a scenario where our service is hosted on a server in another country and thousands of people access the API every second. Without caching, performance could suffer dramatically.
 
 ## Bonus Content.
 
@@ -695,7 +695,7 @@ When we implement pagination, we also need to modify how we cache our data. We c
 
 When we hit our `/books` API with a defined `page` and `size` query params, the results will be fetched accordingly.
 
-{{< figure src="/img/blogs/create-api-using-golang-cache/4.png" position="center" >}}
+{{< figure src="/img/blogs/create-api-using-golang-cache/4.jpg" position="center" >}}
 
 Awesome!! 🥳 You’ve successfully implemented caching and pagination to your service!! 👏 Next we will cover how to create unit tests.
 
